@@ -1,9 +1,13 @@
 # Source datasets (including the large VCTK corpus and DEMAND audio)
 Data/
+DeepLearning/.venv/
+DeepLearning/.runtime/
+**/__pycache__/
 
 # Generated audio and binary MATLAB outputs
 Results/Audio/
 Results/**/*.mat
+Results/**/*.pt
 Results/**/*.wav
 Results/**/*.fig
 Results/**/*.png

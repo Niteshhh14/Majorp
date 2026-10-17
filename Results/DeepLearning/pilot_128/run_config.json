@@ -1,0 +1,30 @@
+{
+  "manifest": "DeepLearning/splits/vctk_speaker_split.csv",
+  "noise_root": "Data/Noise/DEMAND",
+  "output_dir": "Results\\DeepLearning\\pilot_128",
+  "epochs": 2,
+  "batch_size": 8,
+  "segment_seconds": 1.0,
+  "limit_train": 128,
+  "limit_val": 32,
+  "seed": 271828,
+  "threads": 4,
+  "device": "cpu",
+  "torch_version": "2.14.1+cpu",
+  "validation_count": 32,
+  "validation_means_pre_cvbw": {
+    "noisy_sisdr_db": 3.451226754450971,
+    "noisy_stoi": 0.795962643213104,
+    "spectral_subtraction_sisdr_db": 5.383223407091018,
+    "spectral_subtraction_stoi": 0.7597633368559737,
+    "neural_sisdr_db": 4.6018448489794785,
+    "neural_stoi": 0.796667947195009
+  },
+  "package_versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "soundfile": "0.14.0",
+    "pystoi": "0.4.1"
+  }
+}

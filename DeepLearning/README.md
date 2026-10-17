@@ -24,10 +24,36 @@ The manifest contains paths and split labels only; the speech corpus remains loc
 4. Use exactly the existing evaluation cases and clean/noisy references for both systems. Apply the same CVBW profile after enhancement and use the matched aided-reference protocol for STOI and SI-SDR. Include case 10 and profile-4 samples 06/10 as named regression checks.
 5. Save configuration, software versions, checkpoint, per-case metrics, aggregate metrics, and failure notes. Compare quality and runtime; do not claim all cases improve if a metric regresses.
 
-## Current execution blocker (2026-10-17)
+## Training environment and command
 
-Training has not started. `python --version` reports Python 3.13.2, but invoking Python fails with “Failed to find real location” for its executable; PyTorch, SciPy, SoundFile, librosa, and pystoi are not installed in the visible Python runtime. MATLAB R2026a batch startup was retried with the project-local writable `.matlabprefs` directory but stopped with MathWorks service error 5201. No model training/evaluation output exists.
+Create a project-local environment on a Python 3.12 machine:
 
-A second runtime check found the Codex bundled Python 3.12.14, which includes NumPy but none of PyTorch, SciPy, SoundFile, librosa, or pystoi. Its pip cache has no wheels. A pip index query cannot resolve `pypi.org`, and Git fetch/ls-remote cannot resolve `github.com` (`getaddrinfo` failure), so this environment cannot download training dependencies or publish commits at present.
+```powershell
+py -3.12 -m venv DeepLearning/.venv
+DeepLearning/.venv/Scripts/python.exe -m pip install -r DeepLearning/requirements.txt
+DeepLearning/.venv/Scripts/python.exe DeepLearning/train_speech_enhancer.py --help
+```
 
-Before training, restore a working MATLAB session or install a supported Python environment with PyTorch, NumPy, SciPy, SoundFile, and STOI support. Then implement and smoke-test the real paired-audio loader and model; the synthetic-tone smoke test is not sufficient. Keep the baseline and split fixed while doing this.
+The local training entry point builds deterministic VCTK/DEMAND mixtures and evaluates the learned mask against both unprocessed mixtures and a Python port of `DSP/spectral_subtraction_enhance.m`. This first mask model is profile-independent; it learns noise suppression only, then profile-specific CVBW is applied afterward. `--limit-train` and `--limit-val` provide reproducible pilots. A full split is CPU-expensive; measure throughput before scheduling it, preferably use an available accelerator, and never select a model using test speakers. Metrics produced by this script are **pre-CVBW**. Final hearing-aid comparison must pass clean, noisy, classical, and neural outputs through the same profile-specific CVBW transform and use matched aided references. Noise files are sampled from all DEMAND environments in every split, so the current split is speaker-disjoint but not noise-scene-disjoint.
+
+The checked pilot was trained with 128 train utterances, 3 epochs, one-second crops, batch size 8, seed 271828, and SI-SDR loss weight 0.01. To reproduce its validation crops and audio, run `evaluate_speech_enhancer.py` with `--split validation --limit 32 --seed 271829 --output Results/DeepLearning/pilot_sisdr_crops/validation_metrics.csv --audio-dir Results/DeepLearning/pilot_sisdr_crops/audio`; then from MATLAB run `addpath('DeepLearning'); evaluate_neural_cvbw_pilot(1:4)` to apply CVBW to one case per profile. Change the output folder when evaluating another checkpoint so results do not overwrite one another.
+
+## Initial training pilot (2026-10-17)
+
+The machine's normal Python 3.13 launcher is broken. The Codex-bundled Python 3.12.14 was usable, so an ignored project-local `.venv` was created and populated with CPU PyTorch 2.14.1, NumPy 2.5.4, SciPy 1.18.1, SoundFile 0.14.0, and pystoi 0.4.1. The supplied reference model forward/backward self-test passed (130.4k parameters; nonzero Farrow `rf` gradient). MATLAB R2026a batch initially failed in the restricted execution context with MathWorks service error 5201; it ran successfully through the elevated network path for this pilot.
+
+Added `train_speech_enhancer.py`, a compact STFT magnitude-mask CNN trained with log-magnitude, waveform, and SI-SDR losses. It loads mic1 VCTK FLAC, resamples to 16 kHz, samples DEMAND noise, generates seeded mixtures at −5/0/5/10 dB, and saves per-utterance SI-SDR/STOI, configuration, and a model checkpoint. A real VCTK/DEMAND sample read, model forward pass, and spectral-subtraction call completed.
+
+Verified the Python spectral-subtraction port against `DSP/spectral_subtraction_enhance.m` on an identical noisy clip: maximum absolute difference 6.08e-5, relative RMS error 4.96e-4, and port-vs-MATLAB SI-SDR 69.14 dB. The remaining difference is consistent with floating-point/window implementation details; the comparison uses effectively the same output.
+
+Three small validation-only runs completed (1-second crops; no held-out test data accessed):
+
+| Training sample | Validation n | Neural SI-SDR / STOI | Spectral subtraction SI-SDR / STOI |
+|---|---:|---|---|
+| 16 utterances, 1 epoch; no SI-SDR loss | 8 | 3.29 dB / 0.558 | 6.94 dB / 0.533 |
+| 128 utterances, 2 epochs; no SI-SDR loss | 32 | 4.60 dB / 0.797 | 5.38 dB / 0.760 |
+| 128 utterances, 3 epochs; SI-SDR weight 0.01 | 32 | 11.10 dB / 0.797 | 5.38 dB / 0.760 |
+
+For the 32-case last pilot, neural output exceeded spectral subtraction on 25/32 SI-SDR rows and 26/32 STOI rows; mean STOI was only +0.0012 over the noisy mixture. These are tuning results on 7 validation speakers, before CVBW. The same four validation mixtures (one each for profiles 1/4/35/36) were also passed through MATLAB CVBW. With SI-SDR loss, mean paired aided SI-SDR change was +3.663 dB for neural vs +6.147 dB for spectral subtraction. Mean aided STOI changes were +0.0164 neural vs +0.0157 classical, averaged over the 3 cases with valid MATLAB STOI; one STOI case returned NaN. Without SI-SDR loss, neural mean aided changes were +2.282 dB / +0.0040 STOI, while classical stayed +6.147 dB / +0.0157. Thus the SI-SDR loss improved neural results, but spectral subtraction still had higher aided SI-SDR on all four profiles. These are tuning results, not final performance claims. Per-case metrics are in `Results/DeepLearning/pilot_sisdr_crops` and `pilot_128_crops`; model checkpoints and WAVs are local ignored artifacts.
+
+A larger 512-train/128-validation, 5-epoch CPU run was stopped after several minutes because the workload was too slow for the available CPU and had not reached an epoch boundary. It produced no metrics/checkpoint. A repeat to add crop offsets was stopped after its first epoch; the original complete checkpoint was retained and re-evaluated with the exact same deterministic validation crops, reproducing its metric summary. Checkpoints are now saved after every epoch and the evaluator supports a quick `--limit` to prevent accidentally processing all 2,568 validation utterances. The data split reuses DEMAND environments across splits, so the next experiment should define noise-scene-disjoint splits before making any noise-generalization claim. Do not use the pre-CVBW pilot table as a final hearing-aid result.

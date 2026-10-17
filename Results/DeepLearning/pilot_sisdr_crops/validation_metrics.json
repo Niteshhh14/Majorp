@@ -1,0 +1,24 @@
+{
+  "split": "validation",
+  "rows": 32,
+  "unique_speakers": 7,
+  "checkpoint": "Results/DeepLearning/pilot_sisdr/spectral_mask_net.pt",
+  "seed": 271829,
+  "sample_rate": 16000,
+  "segment_seconds": 1.0,
+  "metrics_pre_cvbw": {
+    "noisy_sisdr_db": 3.451226754450971,
+    "noisy_stoi": 0.795962643213104,
+    "spectral_subtraction_sisdr_db": 5.383223407091018,
+    "spectral_subtraction_stoi": 0.7597633368559737,
+    "neural_sisdr_db": 11.104705886531756,
+    "neural_stoi": 0.7971588794329529
+  },
+  "package_versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "soundfile": "0.14.0",
+    "pystoi": "0.4.1"
+  }
+}

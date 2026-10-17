@@ -22,13 +22,13 @@ MATLAB with Signal Processing Toolbox is expected for audio resampling/filtering
 - `Evaluation/`: SNR/SI-SDR and optional intelligibility/quality metrics.
 - `Visualization/`: figures for pipeline and audiogram fitting.
 - `Available_source_code/`: supplied/reference implementations, including a Python DeepFit reference package.
-- `DeepLearning/`: speaker-disjoint VCTK manifest and the staged neural-enhancement experiment.
+- `DeepLearning/`: speaker-disjoint VCTK manifest, real-audio Python training/evaluation, and MATLAB matched-CVBW pilot evaluator.
 - `Base_papers/`: project source papers.
 - `Results/`: existing run reports/outputs. Generated binary outputs are ignored by Git.
 
 ## Current status
 
-The next phase is being prepared in `DeepLearning/`. A deterministic speaker-disjoint split was generated from locally extracted VCTK mic1 audio (seed 271828): 56 train, 7 validation, and 8 test speakers, covering 28,529 utterances. The manifest is `DeepLearning/splits/vctk_speaker_split.csv`; run `./DeepLearning/prepare_vctk_split.ps1` from the repository root to regenerate it. The current environment cannot run either training stack: Python 3.13.2 fails at interpreter startup, PyTorch/SciPy/audio I/O packages are absent, and MATLAB batch initialization fails with MathWorks service error 5201 after its writable preference directory was configured. No neural model has been trained and no DL performance claim is made yet. See `DeepLearning/README.md` for the exact training/evaluation gate.
+The neural-enhancement phase has started in `DeepLearning/`. A deterministic speaker-disjoint split from VCTK mic1 audio (seed 271828) has 56 train, 7 validation, and 8 test speakers across 28,529 utterances. A small, profile-independent STFT-mask pilot is trained and evaluated on validation speakers only. Before CVBW, its 32-utterance pilot scores are SI-SDR 11.10 dB / STOI 0.797 vs spectral subtraction 5.38 dB / 0.760. After the same CVBW transform on four validation examples (profiles 1/4/35/36), the neural system averages +3.66 dB aided SI-SDR improvement vs +6.15 dB classical; mean aided STOI deltas are +0.0164 vs +0.0157 over the three cases where MATLAB STOI succeeded. Thus the current pilot is not a replacement for the classical baseline. It is a tuning result only; no held-out test cases have been used. See `DeepLearning/README.md` and `WALKTHROUGH.md` for scope, results, and next actions.
 
 The batch hardcoding was found and corrected. Ten 2.5-second VCTK/DEMAND cases at 0 dB use profiles 1, 4, 35, and 36 in a reproducible cycle. Raw processed-versus-clean SNR/SI-SDR/STOI scores remain as diagnostics because CVBW intentionally changes the spectrum. The matched-reference evaluation applies the same audiogram transform to clean and noisy references, then measures aided outputs against aided clean speech. Across ten cases, paired SI-SDR change averages +4.04 dB (range +0.33 to +7.09 dB) and paired STOI change averages +0.0268 (range +0.0028 to +0.0606); both improved in all ten, with small gains in samples 06 and 10.
 

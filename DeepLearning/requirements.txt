@@ -1,0 +1,6 @@
+# Python 3.12-compatible local experiment environment. Install into .venv.
+torch>=2.5,<3
+numpy>=1.26,<3
+scipy>=1.13
+soundfile>=0.12
+pystoi>=0.4

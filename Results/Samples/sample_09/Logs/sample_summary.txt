@@ -10,6 +10,12 @@ Denoised SNR: 7.22 dB
 Denoised delta SNR: 7.22 dB
 Processed SNR: -5.95 dB
 Processed delta SNR: -5.95 dB
+Spectral-subtraction alpha: 1.15
+Spectral-subtraction floor factor: 0.04
+Raw processed-versus-clean scores are diagnostic only after audiogram shaping.
+Matched aided-reference STOI before denoising: 0.8714
+Matched aided-reference STOI after denoising: 0.8867
+Matched aided-reference STOI change: 0.0153
 Clean audio: Results\Samples\sample_09\Audio\clean_16k.wav
 Noisy audio: Results\Samples\sample_09\Audio\noisy_0dB.wav
 Denoised audio: Results\Samples\sample_09\Audio\denoised_spectral_subtraction.wav
@@ -20,3 +26,5 @@ Prototype response figure: Results\Samples\sample_09\Figures\cvbw_prototype_filt
 CVBW audiogram fit figure: Results\Samples\sample_09\Figures\cvbw_band_responses_and_audiogram_fit.png
 Audiogram matching error figure: Results\Samples\sample_09\Figures\audiogram_matching_error.png
 CVBW sub-band RMS figure: Results\Samples\sample_09\Figures\cvbw_audio_subband_rms.png
+
+Matched aided-reference SI-SDR change: 6.91 dB

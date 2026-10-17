@@ -8,18 +8,25 @@ Maximum duration: 1.50 seconds
 Input SNR: 5.00 dB
 Denoised SNR: 10.35 dB
 Processed SNR: -8.92 dB
+Spectral-subtraction alpha: 1.15
+Spectral-subtraction floor factor: 0.04
 Input SI-SDR: 4.96 dB
 Denoised SI-SDR: 10.09 dB
 Processed SI-SDR: -84.49 dB
 Input STOI: 0.8268
 Denoised STOI: 0.7862
 Processed STOI: 0.4740
+Matched aided-reference SI-SDR change after denoising: 5.10 dB
+Matched aided-reference STOI change after denoising: -0.0326
 Input PESQ: NaN
 Denoised PESQ: NaN
 Processed PESQ: NaN
 Input HASPI: NaN
 Denoised HASPI: NaN
 Processed HASPI: NaN
+Maximum matching error: 0.95 dB
+Minimum matching error: -0.96 dB
+Mean absolute matching error: 0.45 dB
 Metric notes: SNR and SI-SDR are always computed. STOI, PESQ, and HASPI are computed only when compatible MATLAB functions are available; otherwise NaN is stored.
 Clean audio: Results\EvaluationGrid\case_010\Audio\clean_16k.wav
 Noisy audio: Results\EvaluationGrid\case_010\Audio\noisy_+5dB.wav
@@ -27,3 +34,7 @@ Denoised audio: Results\EvaluationGrid\case_010\Audio\denoised_spectral_subtract
 Processed audio: Results\EvaluationGrid\case_010\Audio\processed_audiogram_01.wav
 Waveform figure: Results\EvaluationGrid\case_010\Figures\full_pipeline_waveforms.png
 Spectrogram figure: Results\EvaluationGrid\case_010\Figures\full_pipeline_spectrograms.png
+Prototype response figure: Results\EvaluationGrid\case_010\Figures\cvbw_prototype_filter_response.png
+CVBW audiogram fit figure: Results\EvaluationGrid\case_010\Figures\cvbw_band_responses_and_audiogram_fit.png
+Audiogram matching error figure: Results\EvaluationGrid\case_010\Figures\audiogram_matching_error.png
+CVBW sub-band RMS figure: Results\EvaluationGrid\case_010\Figures\cvbw_audio_subband_rms.png

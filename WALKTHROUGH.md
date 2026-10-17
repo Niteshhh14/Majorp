@@ -92,3 +92,46 @@ Corrective change: `run_batch_samples` now defaults to a deterministic cycle `[1
 | 2026-10-17 | Ran `run_batch_samples(9,2)` | Completed samples 02–10. Profile sequence across samples 01–10 is 1,4,35,36,1,4,35,36,1,4. Mean denoising SNR gain +5.79 dB; mean processed SNR delta -5.68 dB. |
 | 2026-10-17 | Regenerated ten CVBW figure sets and alignment diagnostic | All sample folders have seven nonempty PNGs; profile-35 y-axis now shows its full response. New mixed-profile alignment means: raw processed SI-SDR -47.40 dB, best-lag aligned -34.16 dB, max absolute correlation 0.0989. DSP quality issue persists. |
 | 2026-10-17 | Published audiogram profile fix to `origin/main` | Commit `501b95b` includes code, text reports, diagnostic CSV, walkthrough, and teammate prompt. Generated audio/MAT/PNG files remain ignored/local. |
+
+## Baseline stabilization and matched-reference evaluation (2026-10-17)
+
+The next diagnosis separated a CVBW signal-path defect from an evaluation-definition problem. A clean sinusoid test across the existing Farrow path preserved its center frequency and phase for the tested ratio, so this alone did not demonstrate a Farrow bug. A unity sum of the six bands had low SI-SDR/correlation against the original waveform, but that is not a valid identity test for this audiogram-shaped bank. The source's gain tables are intentionally spectral shaping, and the prototype filter remains shared by design. No CVBW preset or reference implementation was retuned without a reproduced implementation defect.
+
+The main reported end-to-end SNR/SI-SDR/STOI compared audiogram-shaped output against unprocessed clean speech. That reference has a different spectrum by construction, so these scores can look severely negative even when the denoiser helps. Added `Evaluation/evaluate_aided_reference.m`: it applies the same profile to clean and noisy references, then compares the noisy aided and processed aided signals with the aided clean reference. Reports retain the original raw scores as diagnostics and now label them non-comparable, while showing matched aided SI-SDR/STOI and their denoising deltas. `run_batch_samples` adds these fields to each sample report and the batch CSV. Existing rows without the new metrics are labeled NaN rather than guessed.
+
+The full ten-sample mixed-profile rerun completed. Matched aided-reference changes (noisy-to-denoised after applying the same profile to clean/noisy references) were:
+
+| Sample | Profile | SI-SDR change (dB) | STOI change |
+|---|---:|---:|---:|
+| 01 | 1 | +4.91 | +0.0146 |
+| 02 | 4 | +4.33 | +0.0287 |
+| 03 | 35 | +7.09 | +0.0408 |
+| 04 | 36 | +0.78 | +0.0285 |
+| 05 | 1 | +4.59 | +0.0252 |
+| 06 | 4 | +0.33 | +0.0357 |
+| 07 | 35 | +5.76 | +0.0606 |
+| 08 | 36 | +3.57 | +0.0161 |
+| 09 | 1 | +6.91 | +0.0153 |
+| 10 | 4 | +2.17 | +0.0028 |
+
+Mean changes are +4.04 dB SI-SDR and +0.0268 STOI; all ten deltas are positive. The smallest SI-SDR change is sample 06/profile 4 (+0.33 dB); the smallest STOI change is sample 10/profile 4 (+0.0028). This supports that the denoiser helps in this ten-case snapshot but does not establish performance across the full noise/SNR/profile grid or clinical benefit. Sample 01/profile 1 specifically had noisy/processed aided SI-SDR -0.20/+4.71 dB and STOI 0.8081/0.8227. Its raw processed SI-SDR -46.37 dB and raw STOI 0.6660 remain diagnostics against a different-reference spectrum. Mean denoising SNR gain before audiogram processing across the ten cases remains +5.79 dB.
+
+Failures during this session: an early MATLAB diagnostic used `corr`, unavailable in the current installation; normalized correlation was then calculated directly. A one-line `-batch` command rejected a local helper function definition; the diagnostic was rewritten using inline operations. The first PowerShell aggregation command had a `$label:` interpolation parse error; its retry parsed the audiogram profile label as a floating-point metric; a numeric-regex extraction then generated the ten-case table correctly. MATLAB `checkcode` on the changed MATLAB files completed with no warnings. The paired-reference helper and batch/evaluation-grid summary wiring were checked, and `run_batch_samples(1,1,1)`, `run_batch_samples(3,2)`, and `run_batch_samples(6,5)` completed. Reports and batch CSV contain matched aided SI-SDR/STOI fields; prior uncomputed values are represented as NaN during migration.
+
+| Date | Attempt / finding | Result and follow-up |
+|---|---|---|
+| 2026-10-17 | Tested a clean tone through one Farrow resampling ratio | Frequency and phase were preserved for the tested tone. This does not establish full speech-bank reconstruction, but did not support changing Farrow signs. |
+| 2026-10-17 | Compared unity-summed sub-bands against clean speech | Poor raw SI-SDR/correlation; not a valid pass-through criterion for a tuned audiogram bank, so no change was made on this evidence alone. |
+| 2026-10-17 | Tried `corr` in a MATLAB diagnostic | Unavailable function/toolbox error; replaced with normalized dot-product correlation. |
+| 2026-10-17 | Tried a local helper definition in inline `matlab -batch` code | MATLAB rejected inline local function definitions; reran the diagnostic without the helper. |
+| 2026-10-17 | Added paired aided-reference metrics and reran all ten cases | MATLAB checkcode clean. Mean paired improvement +4.04 dB SI-SDR / +0.0268 STOI; all ten deltas positive. Samples 06 and 10 show smaller improvements; next run the updated 12-case grid before freezing the baseline. |
+
+### 12-case grid and spectral-subtraction tuning check
+
+Ran `run_evaluation_grid(12)` at the existing spectral-subtraction setting (`alpha=1.15`, `floorFactor=0.04`). The corrected CSV has 12 data rows and 28 columns. Matched aided-reference SI-SDR improved in all 12 cases (mean +4.25 dB, range +1.29 to +7.33 dB). Matched STOI improved in 11/12 (mean +0.0183, range -0.0326 to +0.0526). The exception is case 10, VCTK sample 5/DEMAND noise 1, profile 1, +5 dB input: paired SI-SDR +5.10 dB but paired STOI -0.0326. The report and CSV preserve this regression. Across the grid the pre-audiogram denoising SNR gain mean is +6.10 dB. Raw processed-vs-clean SNR delta still averages -8.97 dB and is explicitly marked diagnostic because of audiogram spectral shaping.
+
+Investigated that STOI regression with alpha sweep on case 10. At alpha 1.15, paired STOI delta was -0.0326 and paired SI-SDR change +5.10 dB. Alpha 0.60 gave STOI -0.0104, SI-SDR change +2.72 dB. Alpha 0.20 gave STOI -0.0008, SI-SDR change +0.88 dB. Thus lower alpha trades away useful suppression/SI-SDR for a small intelligibility improvement in this case; it was not adopted. A full alpha-0.20 grid trial was stopped after its first three cases showed only +0.98, +1.21, +1.13 dB SNR gain and lower matched scores than alpha 1.15. The full alpha-1.15 12-case grid was rerun afterward so the committed reports and summaries are consistent. The function accepts optional alpha/floor parameters for controlled future experiments; defaults remain 1.15/0.04. Reports record both values.
+
+More failures/repair notes: the first candidate-grid MATLAB loop used invalid `for [a,f]=...` syntax; corrected to index matrix rows. When regenerating the CSV from the completed MAT after discovering an exporter format mismatch, MATLAB printed the literal `\n` sequence; the file was repaired to real line breaks and re-imported as 12 rows/28 columns. The exporter format string was fixed, and the complete grid rerun verified the CSV without manual patching. One PowerShell check treated duplicate `NaN` values as column names while the CSV was malformed; that was resolved by fixing CSV row formatting first. A later PowerShell text insertion used the wrong `Regex.Replace` overload and duplicated alpha/floor annotations; all ten text reports were cleaned and the values inserted once at the correct location. `git diff --check` passes (only standard LF-to-CRLF notices on Windows).
+
+**Baseline decision:** retain alpha 1.15 as the classical comparator. The matched-reference protocol is now wired into batch and grid output, and the 12-case run has positive SI-SDR changes in every case and STOI changes in 11/12. The baseline is usable for the deep-learning comparison, with case 10 and small-gain profile-4 samples explicitly retained as regression targets. Next freeze the data split, use identical noisy references and audiogram profiles, and compare deep-learning output against spectral subtraction plus CVBW; do not omit the STOI regression.

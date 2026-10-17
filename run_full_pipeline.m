@@ -57,6 +57,10 @@ processed = processed(1:L);
 denoised = denoised(1:L);
 
 metrics = evaluate_basic_metrics(clean, noisy, processed, fs, denoised);
+metrics.aidedReference = evaluate_aided_reference( ...
+    clean, noisy, processed, fs, audiogramNumber);
+metrics.noiseReductionAlpha = noiseReductionDebug.alpha;
+metrics.noiseReductionFloorFactor = noiseReductionDebug.floorFactor;
 
 ensureFolder(audioFolder);
 ensureFolder(metricsFolder);
@@ -132,6 +136,22 @@ fprintf(fid, 'Processed SI-SDR: %.2f dB\n', metrics.processedSiSdrDb);
 fprintf(fid, 'Input STOI: %.4f\n', metrics.inputStoi);
 fprintf(fid, 'Denoised STOI: %.4f\n', metrics.denoisedStoi);
 fprintf(fid, 'Processed STOI: %.4f\n', metrics.processedStoi);
+fprintf(fid, 'Spectral-subtraction alpha: %.2f\n', metrics.noiseReductionAlpha);
+fprintf(fid, 'Spectral-subtraction floor factor: %.2f\n', metrics.noiseReductionFloorFactor);
+fprintf(fid, '\nMatched audiogram-reference evaluation\n');
+fprintf(fid, 'Reference: %s (profile %d)\n', ...
+    metrics.aidedReference.referenceDescription, metrics.aidedReference.audiogramNumber);
+fprintf(fid, 'Noisy aided SI-SDR: %.2f dB\n', metrics.aidedReference.noisyAidedSiSdrDb);
+fprintf(fid, 'Processed aided SI-SDR: %.2f dB\n', metrics.aidedReference.processedAidedSiSdrDb);
+fprintf(fid, 'Aided SI-SDR change after denoising: %.2f dB\n', ...
+    metrics.aidedReference.deltaAidedSiSdrDb);
+fprintf(fid, 'Noisy aided STOI: %.4f\n', metrics.aidedReference.noisyAidedStoi);
+fprintf(fid, 'Processed aided STOI: %.4f\n', metrics.aidedReference.processedAidedStoi);
+fprintf(fid, 'Aided STOI change after denoising: %.4f\n', ...
+    metrics.aidedReference.deltaAidedStoi);
+fprintf(fid, ['Interpretation: the raw processed-versus-clean SNR, SI-SDR, and STOI above are ' ...
+    'diagnostic only because CVBW intentionally changes the spectrum. Use the matched ' ...
+    'audiogram-reference values to assess denoising after the hearing-aid stage.\n']);
 fprintf(fid, 'Maximum matching error: %.2f dB\n', metrics.maxMatchingErrorDb);
 fprintf(fid, 'Minimum matching error: %.2f dB\n', metrics.minMatchingErrorDb);
 fprintf(fid, 'Mean absolute matching error: %.2f dB\n', metrics.meanAbsMatchingErrorDb);

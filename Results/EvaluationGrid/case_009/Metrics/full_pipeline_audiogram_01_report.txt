@@ -12,6 +12,21 @@ Processed SI-SDR: -54.39 dB
 Input STOI: 0.7474
 Denoised STOI: 0.7283
 Processed STOI: 0.5131
+Spectral-subtraction alpha: 1.15
+Spectral-subtraction floor factor: 0.04
+
+Matched audiogram-reference evaluation
+Reference: Clean speech passed through the same audiogram preset (profile 1)
+Noisy aided SI-SDR: 9.76 dB
+Processed aided SI-SDR: 12.93 dB
+Aided SI-SDR change after denoising: 3.17 dB
+Noisy aided STOI: 0.6052
+Processed aided STOI: 0.6138
+Aided STOI change after denoising: 0.0085
+Interpretation: the raw processed-versus-clean SNR, SI-SDR, and STOI above are diagnostic only because CVBW intentionally changes the spectrum. Use the matched audiogram-reference values to assess denoising after the hearing-aid stage.
+Maximum matching error: 0.95 dB
+Minimum matching error: -0.96 dB
+Mean absolute matching error: 0.45 dB
 Metric notes: SNR and SI-SDR are always computed. STOI, PESQ, and HASPI are computed only when compatible MATLAB functions are available; otherwise NaN is stored.
 Denoised audio: Results\EvaluationGrid\case_009\Audio\denoised_spectral_subtraction.wav
 Processed audio: Results\EvaluationGrid\case_009\Audio\processed_audiogram_01.wav

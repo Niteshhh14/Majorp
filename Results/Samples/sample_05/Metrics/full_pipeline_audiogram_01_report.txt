@@ -6,12 +6,25 @@ Denoised SNR: 5.02 dB
 Denoised delta SNR: 5.02 dB
 Processed SNR: -8.51 dB
 Delta SNR: -8.51 dB
+Spectral-subtraction alpha: 1.15
+Spectral-subtraction floor factor: 0.04
 Input SI-SDR: 0.02 dB
 Denoised SI-SDR: 4.66 dB
 Processed SI-SDR: -33.78 dB
 Input STOI: 0.8640
 Denoised STOI: 0.8671
 Processed STOI: 0.5076
+
+Matched audiogram-reference evaluation
+Reference: Clean speech passed through the same audiogram preset (profile 1)
+Noisy aided SI-SDR: -0.32 dB
+Processed aided SI-SDR: 4.27 dB
+Aided SI-SDR change after denoising: 4.59 dB
+Noisy aided STOI: 0.7274
+Processed aided STOI: 0.7526
+Aided STOI change after denoising: 0.0252
+Interpretation: the raw processed-versus-clean SNR, SI-SDR, and STOI above are diagnostic only because CVBW intentionally changes the spectrum. Use the Spectral-subtraction alpha: 1.15
+matched audiogram-reference values to assess denoising after the hearing-aid stage.
 Maximum matching error: 0.95 dB
 Minimum matching error: -0.96 dB
 Mean absolute matching error: 0.45 dB

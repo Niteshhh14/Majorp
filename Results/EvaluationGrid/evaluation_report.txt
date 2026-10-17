@@ -6,3 +6,6 @@ Audiogram profiles: 1, 4, 35, 36
 Metrics: SNR, SI-SDR, optional STOI, optional PESQ, optional HASPI
 Mean denoised SNR gain: 6.10 dB
 Mean processed SNR delta: -8.97 dB
+Mean matched aided-reference SI-SDR change: 4.25 dB
+Mean matched aided-reference STOI change: 0.0183
+Raw processed-versus-clean metrics are diagnostic only after audiogram shaping; use matched aided-reference changes to evaluate denoising after CVBW.

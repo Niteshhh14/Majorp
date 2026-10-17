@@ -1,17 +1,26 @@
-function [enhanced, debug] = spectral_subtraction_enhance(noisy, fs, noiseEstimateSeconds)
+function [enhanced, debug] = spectral_subtraction_enhance(noisy, fs, noiseEstimateSeconds, alpha, floorFactor)
 %SPECTRAL_SUBTRACTION_ENHANCE Classical DSP noise suppression baseline.
 
 if nargin < 3
     noiseEstimateSeconds = 0.35;
+end
+if nargin < 4 || isempty(alpha)
+    alpha = 1.15;
+end
+if nargin < 5 || isempty(floorFactor)
+    floorFactor = 0.04;
+end
+if ~isscalar(alpha) || ~isfinite(alpha) || alpha < 0
+    error('alpha must be a finite, nonnegative scalar.');
+end
+if ~isscalar(floorFactor) || ~isfinite(floorFactor) || floorFactor < 0 || floorFactor > 1
+    error('floorFactor must be a finite scalar in [0, 1].');
 end
 
 noisy = noisy(:);
 frameLength = 256;
 hopLength = 128;
 nfft = 512;
-alpha = 1.15;
-floorFactor = 0.04;
-
 window = hamming(frameLength, 'periodic');
 numFrames = 1 + ceil((length(noisy) - frameLength) / hopLength);
 paddedLength = (numFrames - 1) * hopLength + frameLength;

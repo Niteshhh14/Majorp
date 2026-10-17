@@ -1,0 +1,8 @@
+Multi-Combination MATLAB Evaluation Report
+Cases executed: 12
+Full grid size if expanded: 480
+SNR levels: -5, 0, 5, 10 dB
+Audiogram profiles: 1, 4, 35, 36
+Metrics: SNR, SI-SDR, optional STOI, optional PESQ, optional HASPI
+Mean denoised SNR gain: 6.10 dB
+Mean processed SNR delta: -8.97 dB

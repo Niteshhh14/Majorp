@@ -1,0 +1,9 @@
+Main Data Preparation Summary
+Speech file: C:\Users\Nitesh\Downloads\Other\Major\Hybrid_HearingAid\Hybrid_HearingAid\Data\Speech\VCTK-Corpus-0.92\wav48_silence_trimmed\p225\p225_001_mic1.flac
+Noise file: Data/Noise/DEMAND/DKITCHEN/ch01.wav
+Sampling frequency: 16000 Hz
+Target SNR: 0.00 dB
+Signal length: 32825 samples
+Clean audio: Results/Audio/clean_16k.wav
+Noise audio: Results/Audio/noise_16k.wav
+Noisy audio: Results/Audio/noisy_0dB.wav

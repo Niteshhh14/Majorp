@@ -1,0 +1,6 @@
+sample_id,input_snr_db,denoised_snr_db,denoised_delta_snr_db,processed_snr_db,processed_delta_snr_db,result_folder
+sample_01,0.0000,5.3854,5.3854,-5.7023,-5.7023,Results\Samples\sample_01
+sample_02,-0.0000,5.6355,5.6355,-2.6228,-2.6228,Results\Samples\sample_02
+sample_03,0.0000,7.4053,7.4053,-6.1187,-6.1187,Results\Samples\sample_03
+sample_04,0.0000,4.2742,4.2742,-3.0185,-3.0185,Results\Samples\sample_04
+sample_05,-0.0000,5.0204,5.0204,-5.4612,-5.4612,Results\Samples\sample_05

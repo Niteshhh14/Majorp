@@ -1,0 +1,17 @@
+Full MATLAB Hearing Aid Pipeline Report
+Audiogram preset: 36 - Severe hearing loss in mid to high frequencies
+Sampling frequency: 16000 Hz
+Input SNR: -5.00 dB
+Denoised SNR: -0.13 dB
+Denoised delta SNR: 4.87 dB
+Processed SNR: -7.43 dB
+Delta SNR: -2.43 dB
+Input SI-SDR: -5.35 dB
+Denoised SI-SDR: -2.58 dB
+Processed SI-SDR: -76.81 dB
+Input STOI: 0.4824
+Denoised STOI: 0.4291
+Processed STOI: 0.4160
+Metric notes: SNR and SI-SDR are always computed. STOI, PESQ, and HASPI are computed only when compatible MATLAB functions are available; otherwise NaN is stored.
+Denoised audio: Results\EvaluationGrid\case_011\Audio\denoised_spectral_subtraction.wav
+Processed audio: Results\EvaluationGrid\case_011\Audio\processed_audiogram_36.wav

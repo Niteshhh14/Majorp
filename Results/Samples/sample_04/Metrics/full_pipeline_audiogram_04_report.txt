@@ -1,0 +1,20 @@
+Full MATLAB Hearing Aid Pipeline Report
+Audiogram preset: 4 - Moderate hearing loss at high frequencies
+Sampling frequency: 16000 Hz
+Input SNR: 0.00 dB
+Denoised SNR: 4.27 dB
+Denoised delta SNR: 4.27 dB
+Processed SNR: -3.02 dB
+Delta SNR: -3.02 dB
+Input SI-SDR: -0.14 dB
+Denoised SI-SDR: 2.62 dB
+Processed SI-SDR: -49.26 dB
+Input STOI: 0.7423
+Denoised STOI: 0.7283
+Processed STOI: 0.4807
+Maximum matching error: 0.83 dB
+Minimum matching error: -0.51 dB
+Mean absolute matching error: 0.29 dB
+Metric notes: SNR and SI-SDR are always computed. STOI, PESQ, and HASPI are computed only when compatible MATLAB functions are available; otherwise NaN is stored.
+Denoised audio: Results\Samples\sample_04\Audio\denoised_spectral_subtraction.wav
+Processed audio: Results\Samples\sample_04\Audio\processed_audiogram_04.wav

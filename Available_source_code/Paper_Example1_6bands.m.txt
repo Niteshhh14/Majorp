@@ -1,0 +1,83 @@
+clc;
+close all;
+clear all;
+%%
+% Audiogram Matching for 6 standard audiograms using 10 bands of filters with fixed shifts and gain & using continuous VBW filter
+fs      = 16000;
+BW_val  = [200 300 400 500 600 800];  % sort(unique(BW)); %200 300 400 500 600 700 
+fixedBW = BW_val(1); 
+
+%------------Same specifications given in JART------------%
+PbRip_dB    = 0.05;                % 20log (1+PbRip) dB
+SbRip_dB    = 80;                  % 20log (SbRip) dB
+PbRip       = 10^(PbRip_dB/20)-1;
+SbRip       = 10^(-SbRip_dB/20);
+%--------------------Fixed filter-------------------------% 
+cf          = fixedBW/fs;
+pb          = cf;  
+del         = 2600/fs; 
+sb          = pb+del;
+[n,fo,mo,w] = firpmord( [pb sb], [1 0], [PbRip,SbRip], 1);
+hh          = firpm(n,fo,mo,w);
+[h1,w]      = freqz (hh);
+
+%--------------- Profound loss Right Ear ------------------% 0.8867
+[x2,y2,audiogram_type] = get_audiogram(35);
+
+% BW     = [200     200     300      300       300      400];   %2600
+% shift1 = [0.02649      0.1248   0.2    0.28     0.36    0.48]; 
+% gain   = [86.73     86.5    91     85      89     93.7]; 
+
+BW     = [200     200     300      300       300      400];   %2600
+shift1 = [0.02649      0.1248   0.2    0.28     0.36    0.48]; 
+gain   = [86.73     86.5    91     85      89     93.7]; 
+
+ audiogram_matching(BW,BW_val,fixedBW,shift1,gain,hh,x2,y2,audiogram_type);
+
+% % %--------------- Severe hearing loss in the mid to high frequencies ------------------% 0.8867
+[x2,y2,audiogram_type] = get_audiogram(36);
+
+BW     = [300     300      300        200      300        500];   %2600
+shift1 = [0.0612    0.11     0.1992     0.251    0.32      0.439]; 
+gain   = [16.3       42.35   72.25     86.5       79.1       68.2]; 
+
+ audiogram_matching(BW,BW_val,fixedBW,shift1,gain,hh,x2,y2,audiogram_type);
+% ------------------------------------------------------------%
+
+% % -------- Mild to moderate hearing loss at low frequencies ---------------%
+[x2,y2,audiogram_type] = get_audiogram(3);
+
+
+BW     = [200    300      300    300    400     600];
+shift1 = [0.006   0.059  0.1405 0.2093   0.3225 0.496];   %2600
+gain   = [27.3   26.7   18.2    12.5 14.7    19];
+
+audiogram_matching(BW,BW_val,fixedBW,shift1,gain,hh,x2,y2,audiogram_type);
+
+% %--------------- Mild hearing loss at all frequencies ------------------% 0.8867
+[x2,y2,audiogram_type] = get_audiogram(1);
+
+BW     = [300    300    300      300      300       400];  %2600
+shift1 = [-0.011  0.1185   0.21     0.289    0.366    0.484]; 
+gain   = [25     33.49   24.4       20.8    25.6       29.3];
+
+   audiogram_matching(BW,BW_val,fixedBW,shift1,gain,hh,x2,y2,audiogram_type);
+
+% %--------------- Mild hearing loss at high frequencies ------------------% 0.8867
+[x2,y2,audiogram_type] = get_audiogram(2);
+
+BW     = [200     400     200     200      300      400];   %2600
+shift1 = [-0.03   0.098   0.1764   0.252  0.330    0.42]; 
+gain   = [1       2.9     6.5        27.77      27     13.7]; 
+
+ audiogram_matching(BW,BW_val,fixedBW,shift1,gain,hh,x2,y2,audiogram_type);
+% ------------------------------------------------------------%
+
+% % ----------- Moderate hearing loss at high frequencies -------------%
+[x2,y2,audiogram_type] = get_audiogram(4);
+
+BW     = [200    200     400      500      500    500];  %2600
+shift1 = [0.02 0.12   0.153   0.274     0.38  0.52]; 
+gain   = [2      16   38.25    47.5    53      64];
+
+audiogram_matching(BW,BW_val,fixedBW,shift1,gain,hh,x2,y2,audiogram_type);

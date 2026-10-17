@@ -1,0 +1,15 @@
+Main Full Run Summary
+Audiogram preset: 4
+Input SNR: 0.00 dB
+Denoised SNR: 5.39 dB
+Denoised delta SNR: 5.39 dB
+Processed SNR: -5.70 dB
+Processed delta SNR: -5.70 dB
+Clean audio: Results/Audio/clean_16k.wav
+Noisy audio: Results/Audio/noisy_0dB.wav
+Denoised audio: Results\Audio\denoised_spectral_subtraction.wav
+Processed audio: Results\Audio\processed_audiogram_04.wav
+Metrics MAT: Results\Metrics\full_pipeline_audiogram_04.mat
+Pipeline report: Results\Metrics\full_pipeline_audiogram_04_report.txt
+Waveform figure: Results\Figures\full_pipeline_waveforms.png
+Spectrogram figure: Results\Figures\full_pipeline_spectrograms.png

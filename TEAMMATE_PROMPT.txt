@@ -1,0 +1,25 @@
+You are continuing work in the Git repository Majorp (owner-provided remote: https://github.com/Niteshhh14/Majorp.git), a MATLAB hybrid hearing-aid speech-processing project. Read README.md and WALKTHROUGH.md first; treat WALKTHROUGH.md as the project log and append dated entries for every meaningful attempt, success, and failure.
+
+PROJECT PURPOSE
+Prepare clean/noisy speech at 16 kHz, suppress noise with spectral subtraction, then apply a variable-bandwidth (CVBW) audiogram fitting stage. Evaluate with SNR, SI-SDR, optional STOI/PESQ/HASPI, and response plots. The point is useful speech for hearing-loss profiles, not just a matched frequency response.
+
+WHAT EXISTS
+- main.m prepares speech/noise audio and runs the default audiogram preset 4 pipeline.
+- run_full_pipeline.m coordinates denoising, CVBW processing, metrics, WAV/MAT output, and reports.
+- DSP/ includes spectral_subtraction_enhance.m, apply_cvbw_hearing_aid.m, get_cvbw_preset.m, prototype/Farrow code.
+- run_evaluation_grid.m currently covers 12 cases; the report describes a possible 480-case grid.
+- Available_source_code/ and Base_papers/ contain supplied reference material.
+- Results/ has old run outputs and summaries. Large datasets/generated binary outputs are excluded from Git; see .gitignore and WALKTHROUGH.md.
+
+OBSERVED BASELINE / BLOCKER
+Existing preset-4 report: input SNR 0.00 dB; after spectral subtraction 5.39 dB; after CVBW stage -5.70 dB. SI-SDR: input 0.03 dB, denoised 5.04 dB, processed -50.52 dB. STOI drops from 0.9113 denoised to 0.5650 processed. Audiogram matching error looks good (mean absolute 0.29 dB), so do not mistake that for end-to-end success. Existing 12-case report shows mean processed SNR delta -8.97 dB. These are old artifacts and were not reproduced in the documentation handoff.
+
+FIRST TASKS
+1. Confirm your branch and inspect the latest shared commits before changing files. Do not force-push.
+2. Check MATLAB/Octave and toolbox availability; reproduce the preset-4 baseline and record exact commands/version/results.
+3. Diagnose the CVBW degradation before retuning presets: inspect per-band waveforms, lag/correlation, length, RMS/peak, gain, clipping, and filter/Farrow phase/time alignment. Compare with the supplied reference MATLAB sources. Distinguish a true DSP bug from metric misalignment while retaining both aligned and unaligned diagnostics.
+4. Make the smallest evidence-backed fix, then run focused deterministic checks and the 12-case subset. Expand evaluation after the defect is localized.
+5. Update WALKTHROUGH.md with what changed, why, commands/results, and every failure. Update README.md if setup/run guidance changes.
+
+IMPORTANT LIMITS
+No MATLAB/Octave executable was available in the prior authoring environment, and Git CLI failed with `fatal: cannot change to 'C:/Users/Nitesh'`; verify those constraints in your environment. Do not push the ~20.9 GB raw corpus or generated binaries. Confirm data licenses before redistribution. Do not claim clinical benefit or completed validation from the current reports. If repository history exists on GitHub, fetch/review it before choosing a branch or pushing.

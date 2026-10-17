@@ -1,0 +1,19 @@
+# Source datasets (including the large VCTK corpus and DEMAND audio)
+Data/
+
+# Generated audio and binary MATLAB outputs
+Results/Audio/
+Results/**/*.mat
+Results/**/*.wav
+Results/**/*.fig
+Results/**/*.png
+Results/**/*.pdf
+Results/**/*.jpg
+Results/**/*.jpeg
+Results/**/*.zip
+
+# MATLAB/editor and operating-system files
+*.asv
+*.m~
+*.DS_Store
+Thumbs.db

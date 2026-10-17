@@ -1,0 +1,29 @@
+Evaluation Case Summary
+Case ID: case_002
+Speech file: C:\Users\Nitesh\Downloads\Other\Major\Hybrid_HearingAid\Hybrid_HearingAid\Data\Speech\VCTK-Corpus-0.92\wav48_silence_trimmed\p225\p225_001_mic1.flac
+Noise file: C:\Users\Nitesh\Downloads\Other\Major\Hybrid_HearingAid\Hybrid_HearingAid\Data\Noise\DEMAND\OOFFICE\ch01.wav
+Target SNR: 10.00 dB
+Audiogram preset: 1
+Maximum duration: 1.50 seconds
+Input SNR: 10.00 dB
+Denoised SNR: 17.39 dB
+Processed SNR: -6.59 dB
+Input SI-SDR: 10.00 dB
+Denoised SI-SDR: 17.32 dB
+Processed SI-SDR: -46.69 dB
+Input STOI: 0.9950
+Denoised STOI: 0.9944
+Processed STOI: 0.6551
+Input PESQ: NaN
+Denoised PESQ: NaN
+Processed PESQ: NaN
+Input HASPI: NaN
+Denoised HASPI: NaN
+Processed HASPI: NaN
+Metric notes: SNR and SI-SDR are always computed. STOI, PESQ, and HASPI are computed only when compatible MATLAB functions are available; otherwise NaN is stored.
+Clean audio: Results\EvaluationGrid\case_002\Audio\clean_16k.wav
+Noisy audio: Results\EvaluationGrid\case_002\Audio\noisy_+10dB.wav
+Denoised audio: Results\EvaluationGrid\case_002\Audio\denoised_spectral_subtraction.wav
+Processed audio: Results\EvaluationGrid\case_002\Audio\processed_audiogram_01.wav
+Waveform figure: Results\EvaluationGrid\case_002\Figures\full_pipeline_waveforms.png
+Spectrogram figure: Results\EvaluationGrid\case_002\Figures\full_pipeline_spectrograms.png

@@ -1,0 +1,240 @@
+clc ; 
+close all ;
+clear all ; 
+% Trying for various audiograms
+%---------------------------------------------------------------------%
+
+% same shifts and bands as done by James Sir
+ x1=[250 500 1000 2000 4000 8000];
+ y1 = [90 90 95 95 90 110];
+ x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+ x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+ x2 = x2(1:1024);
+ y2 = interp1(x21,y1,x2); 
+ audiogram_type='profound loss Right Ear';
+
+figure(11)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [85 85 95 95 110 105];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='profound loss Left Ear';
+
+figure(1)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+ x1=[250 500 1000 2000 4000 8000];
+y1 = [70 70 60 105 110 105];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='severe sensorineural HL Right';
+
+figure(2)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [85 95 100 90 110 100];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='profound HL left';
+figure(3)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [50 55 60 65 70 65];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Moderately severe SN hearing loss';
+figure(4)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+% same shifts and bands as done by James Sir
+x1=[250 500 1000 2000 4000 8000];
+y1 = [55 50 55 60 60 65];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1)));
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2);
+audiogram_type='Moderate to Moderately severe SN hearing loss';
+figure(5)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 6000 8000];
+y1 = [60 75 75 65 65 80 90];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Moderate lateralized 500, 2k ';
+figure(6)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [75 80 95 105 105 105];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Moderately severe SNHL Laterized at 2k ';
+figure(7)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+% shifts and bands as done by James Sir - small change in bands and gains
+% but same number
+x1=[250 500 1000 2000 3000 4000 8000];
+y1 = [25 30 50 70 95 105 105];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Bilateral moderate SNHL  Right ear';
+figure(8)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+
+x1=[250 500 1000 2000 4000 6000 8000];
+y1 = [45 45 55 50 40 105 100];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1)));
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2);
+audiogram_type='Bilateral moderate SNHL  Left ear';
+figure(9)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 6000 8000];
+y1 = [30 25 20 15 15 30 37];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Mild hearing loss  Right';
+figure(10)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [30 25 15 20 25 25];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Mild hearing loss  Left';  
+figure(11)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 3000 4000 8000];
+y1 = [5 20 30 40 45 60 65];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Mild to moderately severe SNHL High frequency sloping';
+figure(12)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [70  70 50 50 60 60];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2_ = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Moderate SNHL Right';
+figure(13)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;
+
+x1=[250 500 1000 2000 4000 8000];
+y1 = [85 80 70 65 85 95];
+x21 = (x1-x1(1))/(2*(x1(end)-x1(1))); 
+x2=x21(1):(x21(end)-x21(1))/1024:x21(end);
+x2 = x2(1:1024);
+y2 = interp1(x21,y1,x2); 
+audiogram_type='Moderate SNHL Left';   
+figure(14)
+plot(x2,y2,'-r'); axis([0 0.5 0 100]); %axis ij;   
+set(gca,'XDir','normal');set(gca,'YDir','reverse');
+xlabel('Normalized Frequency');ylabel('Log Mag (dB)')
+title(audiogram_type,'fontsize',14,'fontweight','normal','fontname','arial');
+%hold on;
+grid on;

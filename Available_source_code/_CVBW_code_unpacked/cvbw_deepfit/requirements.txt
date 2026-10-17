@@ -1,0 +1,10 @@
+torch>=2.0
+numpy>=1.23
+scipy>=1.10        # remez prototype filter design, resample_poly
+# --- for full experiments (not needed for the smoke test) ---
+# pystoi            # STOI / ESTOI objective metrics
+# pesq              # PESQ
+# clarity           # HASPI / HASQI (Clarity Challenge tools)
+# soundfile         # audio I/O
+# matplotlib        # figures
+# pandas            # results tables

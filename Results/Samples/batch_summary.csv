@@ -1,6 +1,11 @@
-sample_id,input_snr_db,denoised_snr_db,denoised_delta_snr_db,processed_snr_db,processed_delta_snr_db,result_folder
-sample_01,0.0000,5.3854,5.3854,-5.7023,-5.7023,Results\Samples\sample_01
-sample_02,-0.0000,5.6355,5.6355,-2.6228,-2.6228,Results\Samples\sample_02
-sample_03,0.0000,7.4053,7.4053,-6.1187,-6.1187,Results\Samples\sample_03
-sample_04,0.0000,4.2742,4.2742,-3.0185,-3.0185,Results\Samples\sample_04
-sample_05,-0.0000,5.0204,5.0204,-5.4612,-5.4612,Results\Samples\sample_05
+sample_id,audiogram_number,input_snr_db,denoised_snr_db,denoised_delta_snr_db,processed_snr_db,processed_delta_snr_db,result_folder
+sample_01,1,0.0000,5.3854,5.3854,-7.1763,-7.1763,Results\Samples\sample_01
+sample_02,4,-0.0000,5.6355,5.6355,-2.6228,-2.6228,Results\Samples\sample_02
+sample_03,35,0.0000,7.4053,7.4053,-8.2610,-8.2610,Results\Samples\sample_03
+sample_04,36,0.0000,4.2742,4.2742,-5.8791,-5.8791,Results\Samples\sample_04
+sample_05,1,-0.0000,5.0204,5.0204,-8.5129,-8.5128,Results\Samples\sample_05
+sample_06,4,0.0000,7.3422,7.3422,-1.6629,-1.6629,Results\Samples\sample_06
+sample_07,35,-0.0000,5.4424,5.4424,-7.8999,-7.8999,Results\Samples\sample_07
+sample_08,36,0.0000,5.6833,5.6833,-2.9679,-2.9680,Results\Samples\sample_08
+sample_09,1,-0.0000,7.2222,7.2222,-5.9482,-5.9482,Results\Samples\sample_09
+sample_10,4,-0.0000,4.4502,4.4503,-5.8504,-5.8503,Results\Samples\sample_10

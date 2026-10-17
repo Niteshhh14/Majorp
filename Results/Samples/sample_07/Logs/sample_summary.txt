@@ -1,0 +1,22 @@
+Sample Pipeline Summary
+Sample ID: sample_07
+Speech file: C:\Users\Nitesh\Downloads\Other\Major\Hybrid_HearingAid\Hybrid_HearingAid\Data\Speech\VCTK-Corpus-0.92\wav48_silence_trimmed\p225\p225_007_mic1.flac
+Noise file: Data\Noise\DEMAND\DKITCHEN\ch01.wav
+Audiogram preset: 35 - Profound hearing loss
+Target SNR: 0.00 dB
+Maximum duration: 2.50 seconds
+Input SNR: -0.00 dB
+Denoised SNR: 5.44 dB
+Denoised delta SNR: 5.44 dB
+Processed SNR: -7.90 dB
+Processed delta SNR: -7.90 dB
+Clean audio: Results\Samples\sample_07\Audio\clean_16k.wav
+Noisy audio: Results\Samples\sample_07\Audio\noisy_0dB.wav
+Denoised audio: Results\Samples\sample_07\Audio\denoised_spectral_subtraction.wav
+Processed audio: Results\Samples\sample_07\Audio\processed_audiogram_35.wav
+Waveform figure: Results\Samples\sample_07\Figures\full_pipeline_waveforms.png
+Spectrogram figure: Results\Samples\sample_07\Figures\full_pipeline_spectrograms.png
+Prototype response figure: Results\Samples\sample_07\Figures\cvbw_prototype_filter_response.png
+CVBW audiogram fit figure: Results\Samples\sample_07\Figures\cvbw_band_responses_and_audiogram_fit.png
+Audiogram matching error figure: Results\Samples\sample_07\Figures\audiogram_matching_error.png
+CVBW sub-band RMS figure: Results\Samples\sample_07\Figures\cvbw_audio_subband_rms.png

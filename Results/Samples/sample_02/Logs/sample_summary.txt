@@ -2,6 +2,7 @@ Sample Pipeline Summary
 Sample ID: sample_02
 Speech file: C:\Users\Nitesh\Downloads\Other\Major\Hybrid_HearingAid\Hybrid_HearingAid\Data\Speech\VCTK-Corpus-0.92\wav48_silence_trimmed\p225\p225_002_mic1.flac
 Noise file: Data\Noise\DEMAND\DLIVING\ch01.wav
+Audiogram preset: 4 - Moderate hearing loss at high frequencies
 Target SNR: 0.00 dB
 Maximum duration: 2.50 seconds
 Input SNR: -0.00 dB

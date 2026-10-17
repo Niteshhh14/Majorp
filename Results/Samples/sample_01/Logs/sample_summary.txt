@@ -2,17 +2,18 @@ Sample Pipeline Summary
 Sample ID: sample_01
 Speech file: C:\Users\Nitesh\Downloads\Other\Major\Hybrid_HearingAid\Hybrid_HearingAid\Data\Speech\VCTK-Corpus-0.92\wav48_silence_trimmed\p225\p225_001_mic1.flac
 Noise file: Data\Noise\DEMAND\DKITCHEN\ch01.wav
+Audiogram preset: 1 - Mild hearing loss at all frequencies
 Target SNR: 0.00 dB
 Maximum duration: 2.50 seconds
 Input SNR: 0.00 dB
 Denoised SNR: 5.39 dB
 Denoised delta SNR: 5.39 dB
-Processed SNR: -5.70 dB
-Processed delta SNR: -5.70 dB
+Processed SNR: -7.18 dB
+Processed delta SNR: -7.18 dB
 Clean audio: Results\Samples\sample_01\Audio\clean_16k.wav
 Noisy audio: Results\Samples\sample_01\Audio\noisy_0dB.wav
 Denoised audio: Results\Samples\sample_01\Audio\denoised_spectral_subtraction.wav
-Processed audio: Results\Samples\sample_01\Audio\processed_audiogram_04.wav
+Processed audio: Results\Samples\sample_01\Audio\processed_audiogram_01.wav
 Waveform figure: Results\Samples\sample_01\Figures\full_pipeline_waveforms.png
 Spectrogram figure: Results\Samples\sample_01\Figures\full_pipeline_spectrograms.png
 Prototype response figure: Results\Samples\sample_01\Figures\cvbw_prototype_filter_response.png

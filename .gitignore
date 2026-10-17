@@ -17,3 +17,5 @@ Results/**/*.zip
 *.m~
 *.DS_Store
 Thumbs.db
+.matlabprefs/
+matlab_crash_dump.*

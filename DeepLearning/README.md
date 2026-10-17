@@ -28,4 +28,6 @@ The manifest contains paths and split labels only; the speech corpus remains loc
 
 Training has not started. `python --version` reports Python 3.13.2, but invoking Python fails with “Failed to find real location” for its executable; PyTorch, SciPy, SoundFile, librosa, and pystoi are not installed in the visible Python runtime. MATLAB R2026a batch startup was retried with the project-local writable `.matlabprefs` directory but stopped with MathWorks service error 5201. No model training/evaluation output exists.
 
+A second runtime check found the Codex bundled Python 3.12.14, which includes NumPy but none of PyTorch, SciPy, SoundFile, librosa, or pystoi. Its pip cache has no wheels. A pip index query cannot resolve `pypi.org`, and Git fetch/ls-remote cannot resolve `github.com` (`getaddrinfo` failure), so this environment cannot download training dependencies or publish commits at present.
+
 Before training, restore a working MATLAB session or install a supported Python environment with PyTorch, NumPy, SciPy, SoundFile, and STOI support. Then implement and smoke-test the real paired-audio loader and model; the synthetic-tone smoke test is not sufficient. Keep the baseline and split fixed while doing this.

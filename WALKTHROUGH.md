@@ -35,7 +35,8 @@ Interpretation: denoising has positive results for the reported sample, while th
 - Confirmed the workspace originally had no Git metadata or top-level project documentation; initialized Git in the project root and configured `origin` to the owner-supplied URL.
 - Added this walkthrough, `README.md`, and `.gitignore`; added a teammate continuation prompt in `TEAMMATE_PROMPT.txt`.
 - No MATLAB/Octave runtime was available in the environment, so no new DSP execution or verification is claimed.
-- `git ls-remote origin HEAD` failed with `getaddrinfo() thread failed to start`; remote history could not be inspected. Remote target supplied by the owner: `https://github.com/Niteshhh14/Majorp.git`.
+- `git ls-remote origin HEAD` first failed in the restricted shell with `getaddrinfo() thread failed to start`; with network access enabled, the remote was reachable and had no existing `HEAD`. Initial `main` branch was pushed successfully to `https://github.com/Niteshhh14/Majorp.git`.
+- Initial commit: `ab47e6a` (`Document project status and teammate handoff`), containing 103 files. Git excludes the 20+ GB `Data/` tree, generated results binaries, and archived sample output.
 
 ## Failures and constraints log
 
@@ -43,7 +44,7 @@ Interpretation: denoising has positive results for the reported sample, while th
 |---|---|---|---|
 | 2026-10-17 | Inspected default preset-4 saved report | CVBW stage: -5.70 dB processed SNR, -50.52 dB processed SI-SDR, STOI falls 0.9113 to 0.5650 after denoising | Highest-priority functional issue; trace sample alignment and signal scaling through the DSP path before tuning gains. |
 | 2026-10-17 | Inspected existing 12-case grid report | Average processed SNR delta -8.97 dB, despite +6.10 dB average denoised SNR gain | Indicates likely systematic integration issue. The run is only 12 of 480 possible cases. |
-| 2026-10-17 | Initialized Git in the project root and configured `origin` | Local initialization and status succeeded. `git ls-remote origin HEAD` failed with `getaddrinfo() thread failed to start` | Local commit can be prepared, but remote history cannot be inspected or safely updated until network/DNS access works. Do not force-push. |
+| 2026-10-17 | Initialized Git, inspected remote, and pushed initial `main` | Remote had no `HEAD`; commit `ab47e6a` pushed and upstream tracking configured | Teammates can clone the code/docs/reports. They must acquire the excluded dataset separately and read the data/licensing notes. |
 | 2026-10-17 | Checked for MATLAB/Octave runtime | No executable found on PATH | Reproduce results in MATLAB/Octave before accepting DSP changes. |
 
 ## Next work, in order
@@ -54,7 +55,7 @@ Interpretation: denoising has positive results for the reported sample, while th
 4. Fix only the demonstrated cause; add a small deterministic regression case that verifies signal length, bounded peak, finite samples, expected gain/matching error, and no large unintended SI-SDR regression.
 5. Re-run the 12-case subset, then expand coverage deliberately. Summarize per-profile/per-SNR results and optional-metric availability.
 6. Document data acquisition/licensing and MATLAB/toolbox setup. Keep large datasets and generated outputs outside Git; provide reproducible download/setup instructions or Git LFS only if the team explicitly chooses it.
-7. Once network access works, inspect `git ls-remote` on the supplied remote, fetch/review its history, then push the prepared local branch without force. Coordinate branch choice with teammates.
+7. Use the published `main` branch as the shared baseline; work in feature branches and push without force. Review remote history before integrating any later work.
 
 ## Data and result handling
 

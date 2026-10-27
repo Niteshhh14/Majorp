@@ -90,6 +90,8 @@ REFERENCE SCOPE: The supplied CVBW-DeepFit implementation guide proposes audiogr
 
 NEXT ACTION: Inspect why classical aided STOI is negative on average and why profile 4 degrades neural SI-SDR; confirm CSV joins, valid STOI rows, CVBW signal levels and metric call conventions. Then design a validation-only aided-objective training/selection experiment and compare to classical. Report runtime/parameter count. Only after method and validation protocol freeze, evaluate test speakers once. Continue appending failures/results here and in WALKTHROUGH.md.
 
+PUBLISH STATUS: 32-case metrics, reproducible summary script, README/DeepLearning README, walkthrough, and this prompt were published as commit 7e7b414 to origin/main. A later ls-remote confirmation failed due a local DNS/thread-start error, but `git push origin main` returned success and local origin/main points at 7e7b414. Do not include the unrelated open Word guide/lock files from the working tree in follow-up commits.
+
 LATEST AIDED VALIDATION AUDIT (2026-10-27)
 The saved 128-train/3-epoch neural pilot (selected on pre-CVBW metrics) was evaluated through the real MATLAB CVBW stage for all 32 saved validation mixtures, using the identical profile transform on clean/noisy/classical/neural signals. Seven validation speakers, eight cases for each experimental profile; test speakers remain untouched. The CSV at Results/DeepLearning/pilot_sisdr_crops/aided_reference_metrics.csv now contains 32 rows (the older four-row CSV was replaced). Summary is Results/DeepLearning/pilot_sisdr_crops/aided_reference_summary.md and can be regenerated with DeepLearning/summarize_aided_comparison.py.
 

@@ -173,3 +173,19 @@ Comparison audit addendum: MATLAB R2026a batch started successfully through elev
 Checked that the Python alpha=1.15/floor=0.04 spectral-subtraction port matches MATLAB on the same 1-second noisy clip: maximum absolute output difference 6.08e-5, relative RMS 4.96e-4, SI-SDR 69.14 dB. The first check failed only because the MATLAB Evaluation folder was absent from the path; added it and reran successfully. The evaluator currently cycles validation profile IDs [1,4,35,36] for research comparison; not a clinical mapping. Compact pilot CSV and portable configuration JSONs are tracked; WAVs/checkpoints/venv remain ignored.
 
 PUBLICATION UPDATE: the initial neural pilot implementation, four-profile matched CVBW comparison, portable metric/config files, README, WALKTHROUGH, and teammate prompt are committed and pushed to origin/main as `748383f` (`Train and evaluate initial speech enhancement pilot`). The worktree was clean after that push. The model checkpoint, validation WAVs, virtual environment, and raw datasets remain local/ignored.
+
+## Project familiarization and literature review (2026-10-27)
+
+Created `PROJECT_FAMILIARIZATION_GUIDE.docx` to help the project owner and teammates restart from the project goal, the conventional hearing-aid/noise-reduction context, the papers in `Base_papers`, current MATLAB and Python workflows, evidence and metric caveats, current neural pilot status, repository navigation, and sequenced next steps. The guide distinguishes papers' published results from results measured in this repository, and distinguishes the supplied CVBW-DeepFit proposal/reference code from the project's real-audio STFT-mask pilot.
+
+Reviewed all four PDFs in `Base_papers` and the supplied CVBW-DeepFit implementation guide/manuscript. The three speech-enhancement papers provide motivation for neural intelligibility optimization, mobile denoising, and low-latency filtering. `Implementation_Hearing Aid.pdf` has no extractable page text in the available environment and PDF metadata identifies the CVBW-DeepFit Markdown guide; treat it as a supplied design/implementation export, not as verified peer-reviewed work. The readable guide itself says the supplied Python trainer uses synthetic tones/noise and calls out unfinished real-data/perceptual/hardware stages.
+
+The guide records the central project decision: keep spectral subtraction alpha 1.15 + CVBW as the classical reference; tune the neural model against final matched aided-reference performance because its pre-CVBW pilot scores do not translate into higher aided SI-SDR. The four-case aided pilot favored classical SI-SDR (+6.15 dB mean paired change versus neural +3.66 dB); the validation-only result has not used held-out speakers. Current speaker splits are speaker-disjoint but reuse DEMAND scenes across splits.
+
+Document QA: `render_docx.py` could not render because LibreOffice (`soffice.exe`) is unavailable. Opened the DOCX in Microsoft Word through the desktop UI instead and reviewed the five pages. Removed the default blue title rule, placed the literature and roadmap sections at clean page starts, and confirmed that headings, text, tables, repeated table headers, and footers display without clipping.
+
+| Date | Attempt / observation | Result and follow-up |
+|---|---|---|
+| 2026-10-27 | Read README, current handoff, DeepLearning notes, Base_papers PDFs, and CVBW-DeepFit design guide | Onboarding guide separates project implementation/evidence from prior-paper claims and proposed design work. |
+| 2026-10-27 | Created `PROJECT_FAMILIARIZATION_GUIDE.docx` | Covers problem rationale, baseline flow, literature, metrics, measured results and limits, next steps, and repo map. |
+| 2026-10-27 | Rendered DOCX with bundled renderer, then opened in Word for visual QA | LibreOffice is unavailable, but Word opened the document. Reviewed all five pages, removed inherited title border, and adjusted section starts; no clipping was visible. |

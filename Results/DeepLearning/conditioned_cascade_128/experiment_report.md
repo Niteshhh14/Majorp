@@ -1,6 +1,6 @@
 # Audiogram-conditioned CVBW cascade pilot
 
-Date: 2026-11-08  
+Date: 2026-11-08
 Status: validation pilot; held-out test speakers were not accessed.
 
 ## What was compared

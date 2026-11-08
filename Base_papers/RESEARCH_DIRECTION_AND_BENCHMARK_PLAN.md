@@ -48,6 +48,10 @@ These are validation-only, short-snapshot results with seven speakers/eight case
 
 Before changing the model objective, repair and validate the aided metric path: expose a non-peak-normalizing CVBW evaluation mode without changing legacy defaults; measure and record input/output RMS/peak and calibrated SPL; run the official Clarity HASPI/HASQI implementation on a small set and verify argument/reference conventions. Then add an exact or numerically validated differentiable CVBW counterpart only if training through the fitting is required; retain MATLAB as the reference implementation and end-to-end benchmark. After this, define noise-scene-disjoint splits and decide the AECRN reproduction boundary. Only then start the first validation-only aided-objective experiment.
 
+## HASPI/HASQI reference and level convention
+
+The official [Clarity core software documentation](https://claritychallenge.org/docs/icassp2023/software/icassp2023_core_software) specifies a clean target reference, hearing-aid output, audiogram, and a level reference (dB SPL corresponding to 0 dBFS). It says the target and hearing-aid output must use the same SPL calibration. For HASPI, the reference is the target signal, not the target after our CVBW stage; the metric receives the audiogram and models hearing loss internally. Therefore the aided-clean reference used by current SI-SDR/STOI calculations must not be passed blindly as the HASPI reference. Use one documented digital-to-SPL mapping for both signals; do not RMS-normalize each signal independently. Validate HASQI's exact convention and fitting/equalization options separately before scoring.
+
 ## Research/tooling limitations
 
 The literature review used primary publisher/project pages and Firecrawl search/scrape. Hugging Face catalog metadata was checked through Firecrawl; no audiogram-conditioned HF model/data was identified for immediate adoption. Exa and Context7 direct query tools were not exposed in the session. This is not proof no such material exists. AFN-HearNet source licensing needs verification before reuse. The local Python environment did not have the Clarity package installed at last check.

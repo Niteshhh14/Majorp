@@ -294,7 +294,9 @@ Updated `DSP/apply_cvbw_hearing_aid.m` with an optional fourth argument, `struct
 
 Verification: a one-second MATLAB smoke check initially failed to start inside the sandbox with MathWorks service error 5201. The authorized MATLAB launch succeeded. For a random 16 kHz input at 0.01 RMS and profile 4, legacy mode peaked at 0.950000; opt-in level-preserving mode reported peak 20.685665 and RMS 4.142356. This confirms the flag bypasses normalization and exposes why a documented common calibration factor is essential before absolute-level metrics. No aided metric rerun or HASPI/HASQI score was produced in this check.
 
-Next: obtain/verify the official Clarity metric implementation and its level-reference convention; derive a single common calibration from the project signal chain and apply it identically to clean reference and all compared outputs. Then run a small matched metric validation before any aided-loss training. This preserves legacy behavior and keeps the test set sealed.
+The official [Clarity core software documentation](https://claritychallenge.org/docs/icassp2023/software/icassp2023_core_software) was checked after the code smoke test. HASPI takes the clean target reference, hearing-aid output, audiogram, and a level reference (dB SPL corresponding to 0 dBFS); it says reference and output use the same SPL calibration. The reference is not our CVBW-processed clean target because HASPI internally models the audiogram. Keep CVBW-processed clean references for current paired SI-SDR/STOI diagnostics, but do not feed those blindly as HASPI references. HASQI options also need separate convention checking. No HASPI/HASQI scores have yet been computed.
+
+Next: install/verify official Clarity metric code and its level-reference convention; define one digital-to-SPL mapping and apply it identically to target reference and hearing-aid output, without per-signal RMS normalization. Then run a small matched metric validation before aided-loss training. This preserves legacy behavior and keeps the test set sealed.
 
 ## Longer validation and STOI failure diagnosis (2026-11-09)
 

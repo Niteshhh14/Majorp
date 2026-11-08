@@ -1,8 +1,11 @@
-function results = evaluate_neural_cvbw_pilot(caseIndices, artifactDir)
+function results = evaluate_neural_cvbw_pilot(caseIndices, artifactDir, normalizePeak)
 % EVALUATE_NEURAL_CVBW_PILOT Compare neural/classical denoising after shared CVBW.
 % Reads the deterministic WAVs exported by evaluate_speech_enhancer.py, applies
 % the same profile-specific CVBW transformation to clean/noisy/classical/neural
 % signals, then reports paired aided-reference SI-SDR and optional STOI.
+% normalizePeak defaults true for historical reproduction. Set false to
+% preserve CVBW output level; this is a level-aware diagnostic, not calibrated
+% SPL/HASPI/HASQI until a common physical calibration is applied.
 
 if nargin < 1 || isempty(caseIndices)
     caseIndices = 1:4; % One example for each profile; increase after timing check.
@@ -13,6 +16,12 @@ addpath(fullfile(repoRoot, 'DSP'));
 addpath(fullfile(repoRoot, 'Evaluation'));
 if nargin < 2 || isempty(artifactDir)
     artifactDir = fullfile(repoRoot, 'Results', 'DeepLearning', 'pilot_sisdr_crops');
+end
+if nargin < 3 || isempty(normalizePeak)
+    normalizePeak = true;
+end
+if ~islogical(normalizePeak) || ~isscalar(normalizePeak)
+    error('normalizePeak must be a scalar logical value.');
 end
 audioDir = fullfile(artifactDir, 'audio');
 manifest = readtable(fullfile(artifactDir, 'validation_metrics.csv'));
@@ -41,10 +50,11 @@ for k = 1:numel(caseIndices)
     classical = read_audio(fullfile(audioDir, [prefix 'spectral_subtraction.wav']));
     neural = read_audio(fullfile(audioDir, [prefix 'neural.wav']));
 
-    [cleanAided, ~] = apply_cvbw_hearing_aid(clean, 16000, profile);
-    [noisyAided, ~] = apply_cvbw_hearing_aid(noisy, 16000, profile);
-    [classicalAided, ~] = apply_cvbw_hearing_aid(classical, 16000, profile);
-    [neuralAided, ~] = apply_cvbw_hearing_aid(neural, 16000, profile);
+    cvbwOptions = struct('normalizePeak', normalizePeak);
+    [cleanAided, ~] = apply_cvbw_hearing_aid(clean, 16000, profile, cvbwOptions);
+    [noisyAided, ~] = apply_cvbw_hearing_aid(noisy, 16000, profile, cvbwOptions);
+    [classicalAided, ~] = apply_cvbw_hearing_aid(classical, 16000, profile, cvbwOptions);
+    [neuralAided, ~] = apply_cvbw_hearing_aid(neural, 16000, profile, cvbwOptions);
     L = min([numel(cleanAided), numel(noisyAided), ...
              numel(classicalAided), numel(neuralAided)]);
     cleanAided = cleanAided(1:L);
@@ -76,7 +86,12 @@ results = table(caseId, profileId, inputSnrDb, noisyAidedSiSdrDb, ...
     'classical_delta_sisdr_db','neural_delta_sisdr_db', ...
     'noisy_aided_stoi','classical_aided_stoi','neural_aided_stoi', ...
     'classical_delta_stoi','neural_delta_stoi'});
-writetable(results, fullfile(artifactDir, 'aided_reference_metrics.csv'));
+if normalizePeak
+    outputName = 'aided_reference_metrics.csv';
+else
+    outputName = 'aided_reference_metrics_levelaware_uncalibrated.csv';
+end
+writetable(results, fullfile(artifactDir, outputName));
 end
 
 function x = read_audio(path)

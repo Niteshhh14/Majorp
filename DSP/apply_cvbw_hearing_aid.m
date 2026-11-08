@@ -1,5 +1,18 @@
-function [processed, debug] = apply_cvbw_hearing_aid(noisy, fs, audiogramNumber)
+function [processed, debug] = apply_cvbw_hearing_aid(noisy, fs, audiogramNumber, options)
 %APPLY_CVBW_HEARING_AID Apply the MATLAB CVBW reference bank to an audio signal.
+% OPTIONS.normalizePeak defaults to true to preserve historical output levels.
+% Set it false for level-aware evaluation; callers must then apply one common,
+% documented calibration gain to the reference and every compared output.
+
+if nargin < 4 || isempty(options)
+    options = struct();
+end
+if ~isfield(options, 'normalizePeak')
+    options.normalizePeak = true;
+end
+if ~islogical(options.normalizePeak) || ~isscalar(options.normalizePeak)
+    error('options.normalizePeak must be a scalar logical value.');
+end
 
 preset = get_cvbw_preset(audiogramNumber);
 [hh, protoInfo] = prototype_filter(fs, preset.fixedBW);
@@ -28,9 +41,9 @@ linearGain = 10.^(preset.gainDb(:) / 20);
 processedRaw = sum(bands .* linearGain, 1).';
 processed = processedRaw - mean(processedRaw);
 
-peak = max(abs(processed));
-if peak > 0
-    processed = 0.95 * processed / peak;
+preNormalizationPeak = max(abs(processed));
+if options.normalizePeak && preNormalizationPeak > 0
+    processed = 0.95 * processed / preNormalizationPeak;
 end
 
 debug = struct();
@@ -40,6 +53,10 @@ debug.rf = rf;
 debug.selectedRf = rf(bbs_selected);
 debug.bands = bands;
 debug.processedRaw = processedRaw;
+debug.normalizePeak = options.normalizePeak;
+debug.preNormalizationPeak = preNormalizationPeak;
+debug.outputPeak = max(abs(processed));
+debug.outputRms = sqrt(mean(processed.^2));
 end
 
 function y = matchBandLength(x, targetLength)

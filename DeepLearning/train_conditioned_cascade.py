@@ -10,7 +10,6 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 import torch
-import torch.nn.functional as F
 from pystoi import stoi
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
@@ -69,8 +68,20 @@ class AudiogramMaskNet(nn.Module):
 
 
 def audiogram_frequency_weights(profile, bins, device):
-    thresholds = profile.to(device).unsqueeze(1)
-    curve = F.interpolate(thresholds, size=bins, mode="linear", align_corners=True).squeeze(1)
+    # PROFILE_THRESHOLDS are measured at 250, 500, 1000, 2000, 4000, and
+    # 6000 Hz. Interpolate against actual STFT bin frequencies (log-frequency
+    # audiometric axis), not uniformly across bin indices. Clamp outside the
+    # measured range so DC and bins above 6 kHz use the nearest known threshold.
+    profile = profile.to(device)
+    anchors = torch.tensor([250., 500., 1000., 2000., 4000., 6000.], device=device)
+    frequencies = torch.arange(bins, device=device, dtype=profile.dtype) * (SR / N_FFT)
+    log_anchors = torch.log2(anchors)
+    log_frequencies = torch.log2(frequencies.clamp(min=anchors[0], max=anchors[-1]))
+    right = torch.searchsorted(log_anchors, log_frequencies.contiguous()).clamp(1, len(anchors) - 1)
+    left = right - 1
+    fraction = ((log_frequencies - log_anchors[left]) /
+                (log_anchors[right] - log_anchors[left]))
+    curve = profile[:, left] + fraction.unsqueeze(0) * (profile[:, right] - profile[:, left])
     weights = 1.0 + curve
     return weights / weights.mean(dim=1, keepdim=True).clamp_min(1e-6)
 

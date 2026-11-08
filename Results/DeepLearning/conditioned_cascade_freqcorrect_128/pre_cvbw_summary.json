@@ -1,0 +1,13 @@
+{
+  "rows": 32,
+  "profiles": [
+    1,
+    4,
+    35,
+    36
+  ],
+  "mean_conditioned_sisdr_db": 11.24644640243394,
+  "mean_conditioned_stoi": 0.7956585587157874,
+  "mean_inference_ms_per_1s": 19.727653125301003,
+  "parameters": 3741
+}

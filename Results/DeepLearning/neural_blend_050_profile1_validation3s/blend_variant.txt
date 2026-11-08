@@ -1,0 +1,6 @@
+Validation-only blend variant
+strength=0.5
+profiles=[1]
+case_ids=[1, 5, 9, 13, 17, 21, 25, 29]
+formula=noisy + strength * (neural - noisy)
+CVBW is still applied by MATLAB after blending.

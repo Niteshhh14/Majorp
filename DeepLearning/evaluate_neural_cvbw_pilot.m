@@ -24,6 +24,14 @@ if ~islogical(normalizePeak) || ~isscalar(normalizePeak)
     error('normalizePeak must be a scalar logical value.');
 end
 audioDir = fullfile(artifactDir, 'audio');
+if normalizePeak
+    cvbwOutputDir = fullfile(artifactDir, 'cvbw_peak_normalized_mat');
+else
+    cvbwOutputDir = fullfile(artifactDir, 'cvbw_level_preserved_mat');
+end
+if ~exist(cvbwOutputDir, 'dir')
+    mkdir(cvbwOutputDir);
+end
 manifest = readtable(fullfile(artifactDir, 'validation_metrics.csv'));
 
 if any(caseIndices < 1) || any(caseIndices > height(manifest))
@@ -49,6 +57,7 @@ for k = 1:numel(caseIndices)
     noisy = read_audio(fullfile(audioDir, [prefix 'noisy.wav']));
     classical = read_audio(fullfile(audioDir, [prefix 'spectral_subtraction.wav']));
     neural = read_audio(fullfile(audioDir, [prefix 'neural.wav']));
+    cleanReference = clean(:);
 
     cvbwOptions = struct('normalizePeak', normalizePeak);
     [cleanAided, ~] = apply_cvbw_hearing_aid(clean, 16000, profile, cvbwOptions);
@@ -61,6 +70,12 @@ for k = 1:numel(caseIndices)
     noisyAided = noisyAided(1:L);
     classicalAided = classicalAided(1:L);
     neuralAided = neuralAided(1:L);
+    cleanReference = cleanReference(1:L);
+
+    cvbwNormalizePeak = normalizePeak; %#ok<NASGU>
+    outputPath = fullfile(cvbwOutputDir, sprintf('case_%03d.mat', id));
+    save(outputPath, 'cleanReference', 'cleanAided', 'noisyAided', ...
+        'classicalAided', 'neuralAided', 'cvbwNormalizePeak', '-v7');
 
     caseId(k) = id;
     profileId(k) = profile;

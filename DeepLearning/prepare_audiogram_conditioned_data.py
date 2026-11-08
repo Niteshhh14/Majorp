@@ -20,6 +20,8 @@ def main() -> None:
     parser.add_argument("--seed", type=int)
     parser.add_argument("--duration-seconds", type=float, default=1.0,
                         help="Speech/noise crop duration; use longer validation clips for intelligibility metrics.")
+    parser.add_argument("--duration-invariant-scenes", action="store_true",
+                        help="Use independent random streams so noise-file/SNR selection is stable across crop durations.")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
 
@@ -28,7 +30,8 @@ def main() -> None:
 
     seed = args.seed if args.seed is not None else (271828 if args.split == "train" else 271829)
     dataset = PairedVctkDemand(DEFAULT_MANIFEST, DEFAULT_NOISE, args.split,
-                               round(SR * args.duration_seconds), seed, args.limit)
+                               round(SR * args.duration_seconds), seed, args.limit,
+                               duration_invariant=args.duration_invariant_scenes)
     audio_dir = args.output_dir / args.split / "audio"
     target_dir = args.output_dir / args.split / "targets"
     audio_dir.mkdir(parents=True, exist_ok=True)

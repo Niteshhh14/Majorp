@@ -9,7 +9,9 @@ The earlier validation used one-second crops. Independent `pystoi` checks of MAT
 
 ## Data and protocol
 
-Created a separate three-second validation snapshot using the same 32 VCTK utterance rows, speakers, four rotating audiogram profiles, and sample-selection seed as the one-second validation. It uses new three-second crop starts. Because the current data generator consumes a duration-dependent random draw before selecting the DEMAND clip and SNR, noise file is the same in only 23/32 cases and SNR is the same in 25/32. Therefore this is a separate mixture snapshot, not a row-paired extension of the one-second scores. Within this three-second set, noisy, classical, and neural outputs use exactly the same mixtures and each was passed through the same CVBW profile before metric calculation. The already trained frequency-corrected model was evaluated without retraining; no held-out test speakers were accessed.
+Created a separate three-second validation snapshot using the same 32 VCTK utterance rows, speakers, four rotating audiogram profiles, and sample-selection seed as the one-second validation. It uses new three-second crop starts. At the time this snapshot was prepared, the generator consumed a duration-dependent random draw before selecting DEMAND clip and SNR: noise file matches the one-second set in 23/32 cases and SNR matches in 25/32. Therefore this is a separate mixture snapshot, not a row-paired extension of the one-second scores. Within this three-second set, noisy, classical, and neural outputs use exactly the same mixtures and each was passed through the same CVBW profile before metric calculation. The already trained frequency-corrected model was evaluated without retraining; no held-out test speakers were accessed.
+
+After this run, added `--duration-invariant-scenes` to the preparation path via separate RNG streams. A 32-case check confirmed that 1-second and 3-second requests then retain the same speaker, speech utterance, DEMAND file, and SNR for every case while changing crop starts/durations. The option is opt-in to preserve the old default sequence and reproduce this report; these reported numbers were not regenerated with the new option.
 
 Preparation is under `Results/DeepLearning/conditioned_cascade_freqcorrect_validation3s/prepared/`; 3-second audio and aided metrics are in this directory. Python summary generation now reports missing STOI dynamically. All 32 paired aided STOI values are finite for this set.
 
@@ -20,7 +22,7 @@ DeepLearning/.venv/Scripts/python.exe DeepLearning/prepare_audiogram_conditioned
 DeepLearning/.venv/Scripts/python.exe DeepLearning/train_conditioned_cascade.py evaluate --checkpoint Results/DeepLearning/conditioned_cascade_freqcorrect_128/best_model.pt --validation-manifest Results/DeepLearning/conditioned_cascade_freqcorrect_validation3s/prepared/validation_pairs.csv --output-dir Results/DeepLearning/conditioned_cascade_freqcorrect_validation3s
 ```
 
-The paired MATLAB CVBW evaluation is `addpath('DeepLearning'); evaluate_neural_cvbw_pilot(1:32,fullfile(pwd,'Results','DeepLearning','conditioned_cascade_freqcorrect_validation3s'));`. The neural checkpoint is a local generated artifact and is not committed; retrain it using the documented `conditioned_cascade_128` training command if unavailable.
+The paired MATLAB CVBW evaluation is `addpath('DeepLearning'); evaluate_neural_cvbw_pilot(1:32,fullfile(pwd,'Results','DeepLearning','conditioned_cascade_freqcorrect_validation3s'));`. The neural checkpoint is a local generated artifact and is not committed; retrain it using the documented `conditioned_cascade_128` training command if unavailable. For a future duration-matched scene/SNR comparison, add `--duration-invariant-scenes`; that new option was validated but was not used for the metrics in this report.
 
 ## Results
 
@@ -46,4 +48,4 @@ Inference-time summary for this evaluation correctly reports 45.37 ms per 3-seco
 
 ## Next
 
-Use the longer clips for future STOI comparisons. Fix the data generator so speech crop duration does not change noise-file/SNR selection when comparing durations, then freeze a noise-scene-aware validation protocol. Diagnose profile-4 and profile-36 aided distortions before further model tuning. Keep all tuning on validation speakers and evaluate untouched speakers only after the method and protocol are frozen.
+Use the longer clips for future STOI comparisons. The opt-in duration-independent RNG mode is now available and verified; use it in future duration-matched comparisons and freeze a noise-scene-aware validation protocol. Diagnose profile-4 and profile-36 aided distortions before further model tuning. Keep all tuning on validation speakers and evaluate untouched speakers only after the method and protocol are frozen.

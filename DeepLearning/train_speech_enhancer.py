@@ -49,7 +49,8 @@ def rms(audio: np.ndarray) -> float:
 
 class PairedVctkDemand(Dataset):
     def __init__(self, manifest: Path, noise_root: Path, split: str,
-                 segment_samples: int, seed: int, limit: int | None = None):
+                 segment_samples: int, seed: int, limit: int | None = None,
+                 duration_invariant: bool = False):
         with manifest.open("r", newline="", encoding="utf-8-sig") as f:
             rows = [r for r in csv.DictReader(f) if r["split"] == split]
         self.rows = random.Random(seed).sample(rows, limit) if limit and limit < len(rows) else rows
@@ -62,6 +63,7 @@ class PairedVctkDemand(Dataset):
         self.seed = seed
         self.epoch = 0
         self.split = split
+        self.duration_invariant = duration_invariant
 
     def __len__(self):
         return len(self.rows)
@@ -70,23 +72,34 @@ class PairedVctkDemand(Dataset):
         self.epoch = epoch
 
     def __getitem__(self, index: int):
-        rng = random.Random(self.seed + self.epoch * 1_000_003 + index * 7919)
+        base_seed = self.seed + self.epoch * 1_000_003 + index * 7919
+        rng = random.Random(base_seed)
+        if self.duration_invariant:
+            # Keep noise-scene and SNR choices stable when only speech duration
+            # changes. Separate streams prevent a different clean-crop bound
+            # from shifting subsequent random choices.
+            clean_rng = random.Random(base_seed ^ 0x15A4E35)
+            noise_choice_rng = random.Random(base_seed ^ 0x2C9277B5)
+            noise_crop_rng = random.Random(base_seed ^ 0x4F1BBCDC)
+            snr_rng = random.Random(base_seed ^ 0x6C8E9CF5)
+        else:
+            clean_rng = noise_choice_rng = noise_crop_rng = snr_rng = rng
         row = self.rows[index]
         clean, _ = read_mono(str(ROOT / row["relative_path"]))
         n = self.segment_samples
-        clean_start = rng.randrange(max(1, len(clean) - n + 1))
+        clean_start = clean_rng.randrange(max(1, len(clean) - n + 1))
         clean = clean[clean_start:clean_start + n].copy()
         if len(clean) < n:
             clean = np.pad(clean, (0, n - len(clean)))
 
-        noise_path = self.noises[rng.randrange(len(self.noises))]
+        noise_path = self.noises[noise_choice_rng.randrange(len(self.noises))]
         noise, _ = read_mono(str(noise_path))
-        noise_start = rng.randrange(max(1, len(noise) - n + 1))
+        noise_start = noise_crop_rng.randrange(max(1, len(noise) - n + 1))
         noise = noise[noise_start:noise_start + n].copy()
         if len(noise) < n:
             noise = np.pad(noise, (0, n - len(noise)))
 
-        snr_db = rng.choice((-5, 0, 5, 10))
+        snr_db = snr_rng.choice((-5, 0, 5, 10))
         noise *= rms(clean) / (rms(noise) * (10.0 ** (snr_db / 20.0)))
         noisy = clean + noise
         peak = max(float(np.max(np.abs(noisy))), 1e-6)

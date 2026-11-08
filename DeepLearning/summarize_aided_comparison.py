@@ -42,6 +42,7 @@ def build_report(input_path: Path) -> str:
                     if n is not None and c is not None]
     paired_stoi = [n - c for n, c in zip(neural_stoi, classical_stoi)
                    if n is not None and c is not None]
+    missing_paired_stoi = len(rows) - len(paired_stoi)
     valid_neural_stoi = [v for v in neural_stoi if v is not None]
     valid_classical_stoi = [v for v in classical_stoi if v is not None]
 
@@ -78,7 +79,7 @@ def build_report(input_path: Path) -> str:
         "",
         "## Interpretation limits",
         "",
-        "This is a model-tuning result on 32 selected validation mixtures from seven validation speakers, not a held-out test result. Profile IDs are experimental presets and are not linked to the speakers' clinical audiograms. The neural checkpoint was selected using pre-CVBW metrics, so this comparison is an audit of its aided behavior, not evidence that it was trained for aided performance. STOI is missing for some cases and is not imputed. Do not claim clinical benefit or generalization to unseen noise scenes; DEMAND scenes are shared across the current speaker splits.",
+        f"This is a model-tuning result on {len(rows)} selected validation mixtures from seven validation speakers, not a held-out test result. Profile IDs are experimental presets and are not linked to the speakers' clinical audiograms. The neural checkpoint was selected using pre-CVBW metrics, so this comparison is an audit of its aided behavior, not evidence that it was trained for aided performance. " + (f"Paired STOI is missing for {missing_paired_stoi} cases and is not imputed. " if missing_paired_stoi else "All paired STOI values are finite for this set. ") + "Do not claim clinical benefit or generalization to unseen noise scenes; DEMAND scenes are shared across the current speaker splits.",
         "",
     ])
     return "\n".join(lines)

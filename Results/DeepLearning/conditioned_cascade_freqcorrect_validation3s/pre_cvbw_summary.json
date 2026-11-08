@@ -1,0 +1,15 @@
+{
+  "rows": 32,
+  "profiles": [
+    1,
+    4,
+    35,
+    36
+  ],
+  "mean_conditioned_sisdr_db": 10.967987580434745,
+  "mean_conditioned_stoi": 0.7961843721995336,
+  "clip_duration_seconds": 3.0,
+  "mean_inference_ms_per_clip": 45.36740937510331,
+  "mean_inference_ms_per_1s": 15.122469791701102,
+  "parameters": 3741
+}

@@ -199,10 +199,14 @@ def run_evaluate(args):
         writer = csv.DictWriter(stream, fieldnames=list(records[0]))
         writer.writeheader()
         writer.writerows(records)
+    clip_duration = len(dataset[0][0]) / SR
+    mean_clip_ms = float(np.mean(times))
     summary = {"rows": len(records), "profiles": sorted({r["audiogram_profile"] for r in records}),
                "mean_conditioned_sisdr_db": float(np.mean([r["conditioned_sisdr"] for r in records])),
                "mean_conditioned_stoi": float(np.nanmean([r["conditioned_stoi"] for r in records])),
-               "mean_inference_ms_per_1s": float(np.mean(times)),
+               "clip_duration_seconds": clip_duration,
+               "mean_inference_ms_per_clip": mean_clip_ms,
+               "mean_inference_ms_per_1s": mean_clip_ms / clip_duration,
                "parameters": sum(p.numel() for p in model.parameters())}
     (args.output_dir / "pre_cvbw_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))

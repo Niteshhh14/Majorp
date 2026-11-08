@@ -89,6 +89,14 @@ Retrained the same 128-utterance/four-profile model for five epochs with seed 27
 
 Next: validate metric joins/signal levels and investigate why profile 4 degrades after CVBW, then test aided-metric checkpoint selection or a targeted objective on validation only. Do not inspect held-out test speakers during tuning. Keep this evidence explicitly validation-only. Firecrawl's Hugging Face provider is available for model/dataset metadata research; no external HF model is selected yet because matching input conditions, licensing, runtime, and evaluation fairness must be checked first.
 
+### Three-second STOI diagnostic (2026-11-09)
+
+The two one-second paired STOI NaNs were independently checked with `pystoi`; it reports too few STFT frames after silence removal and returns its 1e-5 fallback sentinel. Treat those scores as missing. The inputs are finite; clip duration after silence removal is the limitation. The summary script now distinguishes complete from incomplete paired STOI data.
+
+`prepare_audiogram_conditioned_data.py` now accepts `--duration-seconds`. A separate three-second validation snapshot was run through the already trained model and MATLAB CVBW. It reuses the same 32 VCTK utterance rows/speakers and profile assignments, but different crop starts; noise type differs in 9 cases and SNR differs in 7 because the existing generator's sequential RNG selection depends on crop duration. Thus the three-second results are a separate mixture set and cannot be row-paired with the one-second scores. All 32 aided STOI pairs are finite.
+
+Three-second results (see `Results/DeepLearning/conditioned_cascade_freqcorrect_validation3s/experiment_report.md`): neural-minus-classical aided SI-SDR +0.3087 dB mean / -0.5834 median (14/32 wins); aided STOI +0.0166 mean / +0.0060 median (19/32 wins). By profile, SI-SDR is -2.6284 dB for profile 4 (0/8) and -2.7251 dB for profile 36 (1/8); STOI differences are +0.0034 (3/8) and +0.0050 (3/8). Results are mixed and weaken a broad superiority claim. Model inference was 45.37 ms per 3-second clip (15.12 ms per second), 3,741 parameters; this excludes the much slower MATLAB CVBW stage. Next fix duration-dependent random scene/SNR selection, define longer noise-scene-aware validation, inspect profile 4/36 aided signals, and select/tune using aided metrics only. Preserve untouched test speakers.
+
 ## Initial training pilot (2026-10-17)
 
 The machine's normal Python 3.13 launcher is broken. The Codex-bundled Python 3.12.14 was usable, so an ignored project-local `.venv` was created and populated with CPU PyTorch 2.14.1, NumPy 2.5.4, SciPy 1.18.1, SoundFile 0.14.0, and pystoi 0.4.1. The supplied reference model forward/backward self-test passed (130.4k parameters; nonzero Farrow `rf` gradient). MATLAB R2026a batch initially failed in the restricted execution context with MathWorks service error 5201; it ran successfully through the elevated network path for this pilot.

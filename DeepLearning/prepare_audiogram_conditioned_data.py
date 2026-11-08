@@ -18,12 +18,17 @@ def main() -> None:
     parser.add_argument("--split", choices=("train", "validation"), required=True)
     parser.add_argument("--limit", type=int, default=32)
     parser.add_argument("--seed", type=int)
+    parser.add_argument("--duration-seconds", type=float, default=1.0,
+                        help="Speech/noise crop duration; use longer validation clips for intelligibility metrics.")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
 
+    if args.duration_seconds <= 0:
+        parser.error("--duration-seconds must be positive")
+
     seed = args.seed if args.seed is not None else (271828 if args.split == "train" else 271829)
     dataset = PairedVctkDemand(DEFAULT_MANIFEST, DEFAULT_NOISE, args.split,
-                               SR, seed, args.limit)
+                               round(SR * args.duration_seconds), seed, args.limit)
     audio_dir = args.output_dir / args.split / "audio"
     target_dir = args.output_dir / args.split / "targets"
     audio_dir.mkdir(parents=True, exist_ok=True)
@@ -56,7 +61,8 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
-    print(f"Wrote {len(rows)} profile-conditioned rows from {len(dataset)} clips: {manifest_path}")
+    print(f"Wrote {len(rows)} profile-conditioned rows from {len(dataset)} clips "
+          f"({args.duration_seconds:g} s requested): {manifest_path}")
 
 
 if __name__ == "__main__":

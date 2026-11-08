@@ -1,0 +1,26 @@
+{
+  "hardware_execution": "CPU; same Python process; audio I/O excluded; 1 s input; batch 1",
+  "torch_threads": 4,
+  "baseline_profile_independent": {
+    "parameters": 10681,
+    "estimated_conv_macs_per_1s_clip": 343508256,
+    "latency": {
+      "mean_ms": 21.762910001853015,
+      "median_ms": 21.44310000585392,
+      "p95_ms": 25.743000004149508,
+      "rtf_from_median": 0.02144310000585392
+    }
+  },
+  "conditioned_cascade_denoiser": {
+    "parameters": 3741,
+    "estimated_conv_macs_per_1s_clip": 115798032,
+    "latency": {
+      "mean_ms": 18.844226000655908,
+      "median_ms": 18.625800003064796,
+      "p95_ms": 21.74194998369785,
+      "rtf_from_median": 0.018625800003064796
+    }
+  },
+  "parameter_reduction_fraction": 0.649751895889898,
+  "estimated_conv_mac_reduction_fraction": 0.6628959276018099
+}

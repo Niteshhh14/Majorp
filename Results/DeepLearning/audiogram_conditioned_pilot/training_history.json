@@ -1,0 +1,17 @@
+[
+  {
+    "epoch": 1,
+    "train_logmag_l1": 0.2277272343635559,
+    "validation_logmag_l1": 0.1953551135957241
+  },
+  {
+    "epoch": 2,
+    "train_logmag_l1": 0.20885020215064287,
+    "validation_logmag_l1": 0.1918199062347412
+  },
+  {
+    "epoch": 3,
+    "train_logmag_l1": 0.20666661951690912,
+    "validation_logmag_l1": 0.19033895060420036
+  }
+]

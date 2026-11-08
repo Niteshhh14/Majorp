@@ -38,6 +38,29 @@ The local training entry point builds deterministic VCTK/DEMAND mixtures and eva
 
 The checked pilot was trained with 128 train utterances, 3 epochs, one-second crops, batch size 8, seed 271828, and SI-SDR loss weight 0.01. To reproduce its validation crops and audio, run `evaluate_speech_enhancer.py` with `--split validation --limit 32 --seed 271829 --output Results/DeepLearning/pilot_sisdr_crops/validation_metrics.csv --audio-dir Results/DeepLearning/pilot_sisdr_crops/audio`; then from MATLAB run `addpath('DeepLearning'); evaluate_neural_cvbw_pilot(1:4)` to apply CVBW to one case per profile. Change the output folder when evaluating another checkpoint so results do not overwrite one another.
 
+## Audiogram-conditioned CVBW cascade pilot (2026-11-08)
+
+Added a compact profile-aware denoiser that receives six audiogram thresholds, uses threshold-weighted spectral loss, and then runs through the same MATLAB CVBW stage. It was trained on 128 distinct train utterances replicated across profiles 1/4/35/36 (512 rows), five epochs, seed 271828; the best checkpoint was epoch 4. Validation used the same 32 deterministic one-second mixtures and seven validation speakers as the earlier audit. The test split was not used. The model's audiogram inputs are values from the repository's example presets, not patient measurements.
+
+The full per-case results and limits are in `../Results/DeepLearning/conditioned_cascade_128/experiment_report.md`. Against classical spectral subtraction+CVBW, the conditioned system's paired aided STOI difference averages +0.0574 (higher in 28/30 valid cases); aided SI-SDR difference averages +2.844 dB (higher in 20/32). Profile 4 remains weak on SI-SDR (-1.305 dB difference, higher in 1/8). Against the older profile-independent neural+CVBW pilot, the conditioned model has nearly unchanged aided STOI (+0.00183 mean difference) and slightly lower aided SI-SDR (-0.477 dB).
+
+A same-process CPU benchmark (batch 1, one-second input, four PyTorch threads, I/O excluded) found 3,741 versus 10,681 parameters, estimated convolution MACs 115.8M versus 343.5M, and median model latency 18.63 versus 21.44 ms. This reduces neural-stage model computation; the shared CVBW stage dominates total pipeline time, so this is not an end-to-end speed claim. The result is a promising size/computation trade-off with nearly unchanged aided STOI, not proof of robust superiority. Expand and freeze validation, investigate profile 4, verify STOI independently, and retain test speakers until the design is frozen.
+
+The direct-to-CVBW model probe is recorded separately in `../Results/DeepLearning/audiogram_conditioned_pilot/experiment_report.md` and `validation_summary.json`. It ran quickly but had poor aided output metrics, so it is a failed design and must not be presented as a useful efficiency improvement.
+
+### Reproduce the 128-utterance conditioned cascade
+
+From the repository root, first regenerate deterministic pairs and train/evaluate the neural stage:
+
+```powershell
+DeepLearning/.venv/Scripts/python.exe DeepLearning/prepare_audiogram_conditioned_data.py --split train --limit 128 --output-dir Results/DeepLearning/conditioned_cascade_128/prepared
+DeepLearning/.venv/Scripts/python.exe DeepLearning/prepare_audiogram_conditioned_data.py --split validation --limit 32 --seed 271829 --output-dir Results/DeepLearning/conditioned_cascade_128/prepared
+DeepLearning/.venv/Scripts/python.exe DeepLearning/train_conditioned_cascade.py train --train-manifest Results/DeepLearning/conditioned_cascade_128/prepared/train_pairs.csv --validation-manifest Results/DeepLearning/conditioned_cascade_128/prepared/validation_pairs.csv --output-dir Results/DeepLearning/conditioned_cascade_128 --epochs 5 --batch-size 8 --seed 271828
+DeepLearning/.venv/Scripts/python.exe DeepLearning/train_conditioned_cascade.py evaluate --checkpoint Results/DeepLearning/conditioned_cascade_128/best_model.pt --validation-manifest Results/DeepLearning/conditioned_cascade_128/prepared/validation_pairs.csv --output-dir Results/DeepLearning/conditioned_cascade_128
+```
+
+Then from MATLAB at the repository root run `addpath('DeepLearning'); evaluate_neural_cvbw_pilot(1:32,fullfile(pwd,'Results','DeepLearning','conditioned_cascade_128'));` and regenerate the text summary with `DeepLearning/.venv/Scripts/python.exe DeepLearning/summarize_aided_comparison.py --input Results/DeepLearning/conditioned_cascade_128/aided_reference_metrics.csv --output Results/DeepLearning/conditioned_cascade_128/aided_reference_summary.md`. The trained checkpoint and generated audio are ignored by Git; rerun training to recreate them. Keep test speakers out of model selection.
+
 ## Expanded matched-aided audit (2026-10-27)
 
 The saved validation pilot was evaluated through the actual MATLAB CVBW stage on all 32 selected mixtures (`evaluate_neural_cvbw_pilot(1:32)`). This replaces the earlier four-example aided CSV in that artifact folder. The deterministic validation subset has seven speakers and eight examples per experimental profile; it is not the held-out test set. Aggregate paired aided SI-SDR deltas (enhanced aided output minus noisy aided input, against the same aided-clean reference) are +1.566 dB for classical spectral subtraction and +4.887 dB for neural enhancement. The neural-minus-classical difference averages +3.320 dB, with neural higher in 19/32 cases. By profile, that difference averages +6.928 dB (profile 1, 7/8 wins), −1.454 dB (profile 4, 1/8 wins), +6.607 dB (profile 35, 6/8 wins), and +1.201 dB (profile 36, 5/8 wins). Profile 4 is a targeted follow-up, not a claim of uniform improvement.
